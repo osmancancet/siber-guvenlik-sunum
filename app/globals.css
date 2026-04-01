@@ -25,7 +25,7 @@ body {
   100% { background-position: 200% center; }
 }
 .text-shimmer {
-  background: linear-gradient(90deg, #00ff41 0%, #0ea5e9 25%, #00ff41 50%, #0ea5e9 75%, #00ff41 100%);
+  background: linear-gradient(90deg, #00ff41 0%, #0ea5e9 25%, #93f5b0 50%, #0ea5e9 75%, #00ff41 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -33,11 +33,22 @@ body {
   animation: shimmer 3s linear infinite;
 }
 
+/* ── Neon glow text ── */
+.neon-green { text-shadow: 0 0 10px rgba(0,255,65,0.6), 0 0 40px rgba(0,255,65,0.2), 0 0 80px rgba(0,255,65,0.1); }
+.neon-blue { text-shadow: 0 0 10px rgba(14,165,233,0.6), 0 0 40px rgba(14,165,233,0.2); }
+.neon-red { text-shadow: 0 0 10px rgba(239,68,68,0.6), 0 0 40px rgba(239,68,68,0.2); }
+.neon-purple { text-shadow: 0 0 10px rgba(168,85,247,0.6), 0 0 40px rgba(168,85,247,0.2); }
+
+/* ── Neon border glow ── */
+.glow-border-green { box-shadow: 0 0 8px rgba(0,255,65,0.15), inset 0 0 8px rgba(0,255,65,0.05); }
+.glow-border-red { box-shadow: 0 0 8px rgba(239,68,68,0.15), inset 0 0 8px rgba(239,68,68,0.05); }
+.glow-border-blue { box-shadow: 0 0 8px rgba(14,165,233,0.15), inset 0 0 8px rgba(14,165,233,0.05); }
+
 /* ── Glitch text ── */
 @keyframes glitch-clip-1 {
-  0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 2px); }
-  20% { clip-path: inset(92% 0 1% 0); transform: translate(1px, -1px); }
-  40% { clip-path: inset(43% 0 1% 0); transform: translate(-1px, 3px); }
+  0% { clip-path: inset(40% 0 61% 0); transform: translate(-3px, 2px); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(2px, -1px); }
+  40% { clip-path: inset(43% 0 1% 0); transform: translate(-2px, 3px); }
   60% { clip-path: inset(25% 0 58% 0); transform: translate(3px, 1px); }
   80% { clip-path: inset(54% 0 7% 0); transform: translate(-3px, -2px); }
   100% { clip-path: inset(58% 0 43% 0); transform: translate(2px, -3px); }
@@ -50,7 +61,6 @@ body {
   80% { clip-path: inset(42% 0 25% 0); transform: translate(2px, 3px); }
   100% { clip-path: inset(88% 0 3% 0); transform: translate(-1px, -2px); }
 }
-
 .glitch-text { position: relative; display: inline-block; }
 .glitch-text::before,
 .glitch-text::after {
@@ -71,23 +81,49 @@ body {
   z-index: -1;
 }
 
-/* ── CRT scanline (subtle global) ── */
+/* ── Hex grid background ── */
+.hex-grid {
+  background-image:
+    linear-gradient(30deg, rgba(0,255,65,0.03) 12%, transparent 12.5%, transparent 87%, rgba(0,255,65,0.03) 87.5%),
+    linear-gradient(150deg, rgba(0,255,65,0.03) 12%, transparent 12.5%, transparent 87%, rgba(0,255,65,0.03) 87.5%),
+    linear-gradient(30deg, rgba(0,255,65,0.03) 12%, transparent 12.5%, transparent 87%, rgba(0,255,65,0.03) 87.5%),
+    linear-gradient(150deg, rgba(0,255,65,0.03) 12%, transparent 12.5%, transparent 87%, rgba(0,255,65,0.03) 87.5%),
+    linear-gradient(60deg, rgba(14,165,233,0.02) 25%, transparent 25.5%, transparent 75%, rgba(14,165,233,0.02) 75%),
+    linear-gradient(60deg, rgba(14,165,233,0.02) 25%, transparent 25.5%, transparent 75%, rgba(14,165,233,0.02) 75%);
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+/* ── Pulse animation ── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ── Scanline (global subtle) ── */
 .scanline-global {
   background: repeating-linear-gradient(
     0deg, transparent, transparent 2px,
-    rgba(0, 255, 65, 0.006) 2px, rgba(0, 255, 65, 0.006) 4px
+    rgba(0, 255, 65, 0.008) 2px, rgba(0, 255, 65, 0.008) 4px
   );
   pointer-events: none;
 }
 
 /* ── Terminal glow ── */
-.terminal-glow { text-shadow: 0 0 8px rgba(0, 255, 65, 0.4); }
+.terminal-glow { text-shadow: 0 0 8px rgba(0, 255, 65, 0.5), 0 0 20px rgba(0, 255, 65, 0.2); }
 
 /* ── CRT overlay (for hack demo) ── */
 .crt-overlay {
   background: repeating-linear-gradient(
     0deg, transparent, transparent 2px,
-    rgba(0, 255, 0, 0.02) 2px, rgba(0, 255, 0, 0.02) 4px
+    rgba(0, 255, 0, 0.025) 2px, rgba(0, 255, 0, 0.025) 4px
   );
   pointer-events: none;
+}
+
+/* ── Scan flash on transition ── */
+@keyframes scan-flash {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
 }

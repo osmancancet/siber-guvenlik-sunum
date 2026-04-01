@@ -55,29 +55,36 @@ function MatrixRain() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const chars = "アカサタナハマヤラワ0123456789ABCDEF<>/{}[];";
-    const fontSize = 14;
+    const chars = "アカサタナハマヤラワ0123456789ABCDEF<>/{}[];:$#@!";
+    const fontSize = 16;
     let columns: number[] = [];
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       const cols = Math.floor(canvas.width / fontSize);
-      columns = Array.from({ length: cols }, () => Math.floor(Math.random() * -40));
+      columns = Array.from({ length: cols }, () => Math.floor(Math.random() * -50));
     };
     resize();
     window.addEventListener("resize", resize);
     let frame = 0;
     const draw = () => {
       frame++;
-      if (frame % 3 !== 0) { requestAnimationFrame(draw); return; } // ~20fps
-      ctx.fillStyle = "rgba(5, 5, 16, 0.12)";
+      if (frame % 2 !== 0) { requestAnimationFrame(draw); return; }
+      ctx.fillStyle = "rgba(5, 5, 16, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "rgba(0, 255, 65, 0.06)";
-      ctx.font = `${fontSize}px monospace`;
       for (let i = 0; i < columns.length; i++) {
         const ch = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(ch, i * fontSize, columns[i] * fontSize);
-        if (columns[i] * fontSize > canvas.height && Math.random() > 0.98) columns[i] = 0;
+        // Brighter head character
+        const y = columns[i] * fontSize;
+        ctx.fillStyle = "rgba(0, 255, 65, 0.25)";
+        ctx.font = `bold ${fontSize}px monospace`;
+        ctx.fillText(ch, i * fontSize, y);
+        // Dimmer trail
+        ctx.fillStyle = "rgba(0, 255, 65, 0.08)";
+        ctx.font = `${fontSize}px monospace`;
+        const trailCh = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(trailCh, i * fontSize, y - fontSize * 2);
+        if (y > canvas.height && Math.random() > 0.975) columns[i] = 0;
         columns[i]++;
       }
       requestAnimationFrame(draw);
@@ -88,8 +95,17 @@ function MatrixRain() {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      {/* Hex grid overlay */}
+      <div className="absolute inset-0 hex-grid" />
+      {/* Scanlines */}
       <div className="absolute inset-0 scanline-global" />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
+      {/* Vignette */}
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.55) 100%)" }} />
+      {/* Corner accents */}
+      <div className="absolute top-0 left-0 w-32 h-32" style={{ background: "radial-gradient(circle at 0% 0%, rgba(0,255,65,0.08) 0%, transparent 70%)" }} />
+      <div className="absolute top-0 right-0 w-32 h-32" style={{ background: "radial-gradient(circle at 100% 0%, rgba(14,165,233,0.08) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 w-32 h-32" style={{ background: "radial-gradient(circle at 0% 100%, rgba(14,165,233,0.06) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 right-0 w-32 h-32" style={{ background: "radial-gradient(circle at 100% 100%, rgba(0,255,65,0.06) 0%, transparent 70%)" }} />
     </div>
   );
 }
@@ -107,15 +123,23 @@ function GlitchText({ text, className = "" }: { text: string; className?: string
 function SectionTitle({ icon, title, subtitle, color = "#00ff41" }: { icon: string; title: string; subtitle: string; color?: string }) {
   return (
     <div className="flex flex-col items-center justify-center h-full text-center px-8 relative overflow-hidden">
+      {/* Background radial pulse */}
+      <motion.div className="absolute inset-0 z-0" animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ repeat: Infinity, duration: 3 }}
+        style={{ background: `radial-gradient(circle at 50% 50%, ${color}08 0%, transparent 50%)` }} />
+      {/* Animated ring */}
+      <motion.div className="absolute w-[500px] h-[500px] rounded-full border z-0"
+        style={{ borderColor: `${color}15` }}
+        animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} />
       <div className="relative z-10 flex flex-col items-center">
         <motion.div initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 120, damping: 10 }}
-          className="text-[6rem] mb-6">{icon}</motion.div>
+          className="text-[6rem] mb-6" style={{ filter: `drop-shadow(0 0 20px ${color}40)` }}>{icon}</motion.div>
         <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-5xl sm:text-7xl font-black tracking-tight mb-4" style={{ color }}>
+          className="text-5xl sm:text-7xl font-black tracking-tight mb-4" style={{ color, textShadow: `0 0 20px ${color}50, 0 0 60px ${color}20` }}>
           <GlitchText text={title} />
         </motion.h1>
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="h-[3px] w-60 mb-6 rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
+          className="h-[3px] w-60 mb-6 rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)`, boxShadow: `0 0 15px ${color}40` }} />
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
           className="text-2xl text-gray-300 max-w-4xl">{subtitle}</motion.p>
       </div>
@@ -133,7 +157,7 @@ function BulletSlide({ title, icon, items, note }: { title: string; icon: string
       <div className="space-y-3 w-full max-w-6xl">
         {items.map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.12 * (i + 1), type: "spring", stiffness: 80 }}
-            className="flex items-start gap-4 border-l-4 border-emerald-500/50 bg-white/[0.03] backdrop-blur-sm rounded-r-xl pl-6 py-4">
+            className="flex items-start gap-4 border-l-4 border-emerald-500/50 bg-white/[0.03] backdrop-blur-sm rounded-r-xl pl-6 py-4 glow-border-green">
             <span className="text-3xl shrink-0">{item.emoji}</span>
             <p className="text-xl text-gray-200 leading-relaxed">{item.text}</p>
           </motion.div>
@@ -148,7 +172,7 @@ function AnimatedStat({ value, label, color, delay }: { value: string; label: st
   const animated = useCountUp(value, 1500, delay * 1000);
   return (
     <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay, duration: 0.5 }} className="text-center">
-      <p className="text-7xl sm:text-8xl font-black font-mono mb-3" style={{ color }}>{animated}</p>
+      <p className="text-7xl sm:text-8xl font-black font-mono mb-3" style={{ color, textShadow: `0 0 15px ${color}50, 0 0 40px ${color}20` }}>{animated}</p>
       <p className="text-xl text-gray-400 max-w-[200px]">{label}</p>
     </motion.div>
   );
@@ -170,7 +194,8 @@ function QuoteSlide({ quote, author, emoji }: { quote: string; author: string; e
     <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20 text-center">
       <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-6xl mb-8">{emoji}</motion.span>
       <motion.blockquote initial={{ opacity: 0, y: 30, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ delay: 0.3, duration: 0.7 }}
-        className="text-3xl sm:text-5xl font-light italic text-gray-200 max-w-5xl leading-relaxed">&ldquo;{quote}&rdquo;</motion.blockquote>
+        className="text-3xl sm:text-5xl font-light italic text-gray-200 max-w-5xl leading-relaxed"
+        style={{ textShadow: "0 0 30px rgba(0,255,65,0.1)" }}>&ldquo;{quote}&rdquo;</motion.blockquote>
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 text-xl text-gray-500">— {author}</motion.p>
     </div>
   );
@@ -185,12 +210,12 @@ function TwoColumnSlide({ title, icon, left, right }: { title: string; icon: str
       </motion.div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-6xl">
         <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-          className="border-l-4 border-red-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-6 py-5">
+          className="border-l-4 border-red-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-6 py-5 glow-border-red">
           <h3 className="text-2xl font-bold text-red-400 mb-4">{left.title}</h3>
           <ul className="space-y-3">{left.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-red-400 mt-0.5">✕</span>{item}</li>)}</ul>
         </motion.div>
         <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
-          className="border-l-4 border-green-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-6 py-5">
+          className="border-l-4 border-green-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-6 py-5 glow-border-green">
           <h3 className="text-2xl font-bold text-green-400 mb-4">{right.title}</h3>
           <ul className="space-y-3">{right.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-green-400 mt-0.5">✓</span>{item}</li>)}</ul>
         </motion.div>
@@ -204,7 +229,7 @@ function BigTextSlide({ text, subtext, color = "#00ff41" }: { text: string; subt
     <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20 text-center">
       <motion.h1 initial={{ opacity: 0, scale: 0.7, filter: "blur(12px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         transition={{ type: "spring", stiffness: 80, damping: 12 }}
-        className="text-5xl sm:text-7xl font-black max-w-6xl leading-tight" style={{ color }}>{text}</motion.h1>
+        className="text-5xl sm:text-7xl font-black max-w-6xl leading-tight" style={{ color, textShadow: `0 0 20px ${color}40, 0 0 60px ${color}15` }}>{text}</motion.h1>
       <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
         className="mt-8 text-2xl text-gray-400 max-w-4xl leading-relaxed">{subtext}</motion.p>
     </div>
@@ -1151,16 +1176,26 @@ export default function Presentation() {
 
         {/* Top bar */}
         <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3">
-          <span className="text-sm font-mono text-emerald-500/60 uppercase tracking-wider">{sectionName}</span>
-          <span className="text-sm font-mono text-gray-600">{current + 1} / {total}</span>
+          <span className="text-sm font-mono text-emerald-400/70 uppercase tracking-wider" style={{ textShadow: "0 0 8px rgba(0,255,65,0.3)" }}>{sectionName}</span>
+          <span className="text-sm font-mono text-emerald-400/40">{current + 1} / {total}</span>
         </div>
 
         {/* Progress bar */}
         <div className="absolute top-0 left-0 h-[3px] z-50 transition-all duration-500 ease-out"
           style={{
             width: `${((current + 1) / total) * 100}%`,
-            background: "linear-gradient(90deg, #00ff41, #0ea5e9)",
-            boxShadow: "0 0 10px rgba(0,255,65,0.5), 0 0 20px rgba(0,255,65,0.2)"
+            background: "linear-gradient(90deg, #00ff41, #0ea5e9, #00ff41)",
+            boxShadow: "0 0 12px rgba(0,255,65,0.6), 0 0 30px rgba(0,255,65,0.3), 0 0 60px rgba(14,165,233,0.15)"
+          }} />
+        {/* Progress bar glow dot at tip */}
+        <motion.div className="absolute top-0 h-[6px] w-[6px] rounded-full z-50"
+          animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1 }}
+          style={{
+            left: `${((current + 1) / total) * 100}%`,
+            background: "#00ff41",
+            boxShadow: "0 0 8px #00ff41, 0 0 20px #00ff41",
+            transform: "translate(-50%, -25%)",
+            transition: "left 0.5s ease-out"
           }} />
 
         {/* Slide content */}
@@ -1187,16 +1222,16 @@ export default function Presentation() {
         </button>
 
         {/* Bottom navigation bar */}
-        <div className="absolute bottom-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-md border-t border-white/5">
+        <div className="absolute bottom-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-xl border-t border-emerald-500/10">
           <div className="flex items-center justify-between px-6 py-2.5">
-            <span className="text-xs font-mono text-emerald-400/50 uppercase tracking-wider min-w-[160px]">{sectionName}</span>
+            <span className="text-xs font-mono text-emerald-400/60 uppercase tracking-wider min-w-[160px] neon-green" style={{ textShadow: "0 0 6px rgba(0,255,65,0.3)" }}>{sectionName}</span>
             <div className="flex items-center gap-4">
               <button onClick={goPrev} disabled={current === 0} className="text-gray-500 hover:text-white text-xl border-none bg-transparent cursor-pointer disabled:opacity-20 transition-colors">‹</button>
               <div className="flex gap-1.5">
                 {SECTIONS.map((sec, i) => (
                   <button key={i} onClick={() => { setDirection(sec.start > current ? 1 : -1); setCurrent(sec.start); }}
-                    className={`h-2 rounded-full border-none cursor-pointer transition-all duration-300 ${i === currentSectionIdx ? "bg-emerald-400 w-6" : "bg-white/20 w-2 hover:bg-white/40"}`}
-                    style={i === currentSectionIdx ? { boxShadow: "0 0 8px rgba(0,255,65,0.5)" } : undefined}
+                    className={`h-2 rounded-full border-none cursor-pointer transition-all duration-300 ${i === currentSectionIdx ? "bg-emerald-400 w-6" : "bg-white/15 w-2 hover:bg-white/40"}`}
+                    style={i === currentSectionIdx ? { boxShadow: "0 0 8px rgba(0,255,65,0.6), 0 0 20px rgba(0,255,65,0.3)" } : undefined}
                   />
                 ))}
               </div>
