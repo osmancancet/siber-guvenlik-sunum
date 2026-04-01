@@ -577,117 +577,6 @@ function AutoPasswordCrack({ isActive }: { isActive: boolean }) {
 }
 
 /* ================================================================
-   AUTO-PLAY: DEEPFAKE VOICE CLONE
-   ================================================================ */
-function AutoDeepfakeSim({ isActive }: { isActive: boolean }) {
-  const [phase, setPhase] = useState<"idle" | "real" | "clone" | "compare" | "lesson">("idle");
-
-  useEffect(() => {
-    if (!isActive) { setPhase("idle"); return; }
-    setPhase("real");
-  }, [isActive]);
-
-  useEffect(() => {
-    if (phase === "real") { const t = setTimeout(() => setPhase("clone"), 3500); return () => clearTimeout(t); }
-    if (phase === "clone") { const t = setTimeout(() => setPhase("compare"), 3500); return () => clearTimeout(t); }
-    if (phase === "compare") { const t = setTimeout(() => setPhase("lesson"), 4000); return () => clearTimeout(t); }
-  }, [phase]);
-
-  if (phase === "idle") return null;
-
-  const WaveBar = ({ color, speed = 0.5 }: { color: string; speed?: number }) => (
-    <div className="flex items-center justify-center gap-1 h-16">
-      {[...Array(20)].map((_, i) => (
-        <motion.div key={i} animate={{ height: [6, 40 + Math.sin(i) * 20, 6] }}
-          transition={{ repeat: Infinity, duration: speed, delay: i * 0.05 }}
-          className="w-1.5 rounded-full" style={{ background: color }} />
-      ))}
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <h2 className="text-4xl sm:text-5xl font-bold mb-10">🎭 Deepfake Ses Klonlama</h2>
-      <div className="w-full max-w-3xl">
-        <AnimatePresence mode="wait">
-          {phase === "real" && (
-            <motion.div key="real" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center text-3xl">👧</div>
-                <div className="text-left">
-                  <p className="text-emerald-400 font-bold text-xl">Gerçek Ses — Kızınız Elif</p>
-                  <p className="text-gray-500 text-sm">3 saniyelik Instagram hikayesinden alındı</p>
-                </div>
-              </div>
-              <WaveBar color="#10b981" speed={0.6} />
-              <p className="text-gray-300 text-xl mt-4 italic">&quot;Merhaba baba, bugün çok güzel bir gün!&quot;</p>
-            </motion.div>
-          )}
-
-          {phase === "clone" && (
-            <motion.div key="clone" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              className="bg-red-900/20 border border-red-500/30 rounded-2xl p-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center text-3xl">
-                  <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 0.8 }}>🤖</motion.span>
-                </div>
-                <div className="text-left">
-                  <p className="text-red-400 font-bold text-xl">Klonlanmış Ses — Yapay Zeka</p>
-                  <p className="text-gray-500 text-sm">3 saniye yeterli · %95 benzerlik</p>
-                </div>
-              </div>
-              <WaveBar color="#ef4444" speed={0.55} />
-              <p className="text-gray-300 text-xl mt-4 italic">&quot;Baba, kaza yaptım! Acil para lazım, hemen gönder!&quot;</p>
-            </motion.div>
-          )}
-
-          {phase === "compare" && (
-            <motion.div key="compare" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="grid grid-cols-2 gap-6">
-              <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-6 text-center">
-                <p className="text-emerald-400 font-bold text-xl mb-3">✅ Gerçek Ses</p>
-                <WaveBar color="#10b981" speed={0.6} />
-                <p className="text-3xl font-black text-emerald-400 mt-3">%100</p>
-              </div>
-              <div className="bg-red-900/20 border border-red-500/30 rounded-2xl p-6 text-center">
-                <p className="text-red-400 font-bold text-xl mb-3">❌ Klonlanmış</p>
-                <WaveBar color="#ef4444" speed={0.55} />
-                <p className="text-3xl font-black text-red-400 mt-3">%95</p>
-              </div>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-                className="col-span-2 bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4 text-center">
-                <p className="text-yellow-400 text-xl font-bold">İnsan kulağı farkı ayırt edemiyor!</p>
-              </motion.div>
-            </motion.div>
-          )}
-
-          {phase === "lesson" && (
-            <motion.div key="lesson" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-              className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <p className="text-3xl font-bold text-emerald-400 mb-4">🛡️ Nasıl Korunursunuz?</p>
-              <div className="space-y-3 text-left">
-                {[
-                  { e: "🔑", t: "Aile güvenlik parolası belirleyin — telefonda para isteyene sorun" },
-                  { e: "📵", t: "Sosyal medyada sesli/videolu içeriklerinizi sınırlı paylaşın" },
-                  { e: "📞", t: "Şüphelenin → kapatın → bilinen numaradan kendiniz arayın" },
-                ].map((item, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }}
-                    className="flex items-start gap-3">
-                    <span className="text-2xl shrink-0">{item.e}</span>
-                    <p className="text-xl text-gray-300">{item.t}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
-/* ================================================================
    AUTO-PLAY: WHATSAPP SCAM
    ================================================================ */
 function AutoWhatsAppSim({ isActive }: { isActive: boolean }) {
@@ -792,10 +681,10 @@ const SECTIONS = [
   { name: "Şifreler", start: 10 },
   { name: "Sosyal Müh.", start: 13 },
   { name: "Yapay Zeka", start: 18 },
-  { name: "Bahis & Veri", start: 21 },
-  { name: "Zorbalık", start: 26 },
-  { name: "Korunma", start: 29 },
-  { name: "Kapanış", start: 34 },
+  { name: "Bahis & Veri", start: 20 },
+  { name: "Zorbalık", start: 25 },
+  { name: "Korunma", start: 28 },
+  { name: "Kapanış", start: 33 },
 ];
 
 /* ================================================================
@@ -951,8 +840,6 @@ const slides: Slide[] = [
 
   // ── BÖLÜM 4: YAPAY ZEKA TEHDİTLERİ ──
   { id: "sec-ai", section: "Yapay Zeka Tehditleri", sectionIndex: 4, content: <SectionTitle icon="🤖" title="Yapay Zeka Tehditleri" subtitle="Deepfake, ses klonlama ve akıllı dolandırıcılık" color="#a855f7" /> },
-
-  { id: "deepfake", content: (isActive: boolean) => <AutoDeepfakeSim isActive={isActive} /> },
 
   { id: "whatsapp-fraud", content: (isActive: boolean) => <AutoWhatsAppSim isActive={isActive} /> },
 
