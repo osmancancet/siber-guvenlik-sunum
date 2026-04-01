@@ -430,6 +430,335 @@ function AutoPonziSim({ isActive }: { isActive: boolean }) {
 }
 
 /* ================================================================
+   AUTO-PLAY: PASSWORD CRACKER
+   ================================================================ */
+const CRACK_PASSWORDS = [
+  { pass: "123456", time: "0.001s", label: "6 rakam", color: "#ef4444" },
+  { pass: "ankara06", time: "0.3s", label: "8 harf+sayı", color: "#f97316" },
+  { pass: "Kalem42!", time: "7 dk", label: "8 karışık", color: "#eab308" },
+  { pass: "Tr#n85_kL!m2", time: "3.000 yıl", label: "12 karışık", color: "#22c55e" },
+  { pass: "BenSimavdaYasiyorum!", time: "∞", label: "Cümle şifre", color: "#10b981" },
+];
+
+function AutoPasswordCrack({ isActive }: { isActive: boolean }) {
+  const [idx, setIdx] = useState(-1);
+  const [cracking, setCracking] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [cracked, setCracked] = useState(false);
+  const [masked, setMasked] = useState("");
+
+  useEffect(() => {
+    if (!isActive) { setIdx(-1); setCracking(false); setProgress(0); setCracked(false); return; }
+    const t = setTimeout(() => setIdx(0), 800);
+    return () => clearTimeout(t);
+  }, [isActive]);
+
+  // Start cracking when idx changes
+  useEffect(() => {
+    if (idx < 0 || idx >= CRACK_PASSWORDS.length) return;
+    setCracking(true); setProgress(0); setCracked(false);
+    setMasked("*".repeat(CRACK_PASSWORDS[idx].pass.length));
+  }, [idx]);
+
+  // Progress animation
+  useEffect(() => {
+    if (!cracking) return;
+    const isWeak = idx < 3;
+    const speed = isWeak ? 25 : 60;
+    const maxProg = isWeak ? 100 : (idx === 3 ? 12 : 3);
+    const iv = setInterval(() => {
+      setProgress(p => {
+        if (p >= maxProg) {
+          clearInterval(iv);
+          setCracking(false);
+          setCracked(isWeak);
+          if (isWeak) setMasked(CRACK_PASSWORDS[idx].pass);
+          // Next password after delay
+          setTimeout(() => { if (idx < CRACK_PASSWORDS.length - 1) setIdx(i => i + 1); }, 2000);
+          return maxProg;
+        }
+        return p + 2;
+      });
+    }, speed);
+    return () => clearInterval(iv);
+  }, [cracking, idx]);
+
+  // Randomize masked text while cracking
+  useEffect(() => {
+    if (!cracking || idx < 0) return;
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+    const iv = setInterval(() => {
+      const len = CRACK_PASSWORDS[idx].pass.length;
+      setMasked(Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join(""));
+    }, 50);
+    return () => clearInterval(iv);
+  }, [cracking, idx]);
+
+  if (!isActive || idx < 0) return null;
+  const current = CRACK_PASSWORDS[idx];
+  return (
+    <div className="flex flex-col items-center justify-center h-full px-8 text-center">
+      <h2 className="text-4xl sm:text-5xl font-bold mb-10">🔓 Şifreniz Ne Kadar Sürede Kırılır?</h2>
+      <div className="w-full max-w-2xl">
+        {/* Terminal-style display */}
+        <div className="bg-black/80 border border-emerald-500/30 rounded-2xl p-8 font-mono shadow-2xl">
+          {/* Password display */}
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-500 text-sm">Hedef şifre:</span>
+            <span className="text-emerald-400/50 text-sm">{current.label}</span>
+          </div>
+          <div className="bg-black rounded-xl px-6 py-4 mb-6 border border-gray-800">
+            <motion.p key={masked} className="text-3xl sm:text-4xl font-bold tracking-widest text-center"
+              style={{ color: cracked ? "#ef4444" : cracking ? "#00ff41" : "#6b7280" }}>
+              {masked}
+            </motion.p>
+          </div>
+
+          {/* Progress bar */}
+          <div className="mb-4">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-400">Brute-force ilerleme</span>
+              <span style={{ color: current.color }}>{cracking ? `${Math.min(progress, 100)}%` : cracked ? "KIR ILDI!" : `${progress}% — Yeterli süre yok`}</span>
+            </div>
+            <div className="w-full bg-gray-800 rounded-full h-3">
+              <motion.div className="h-3 rounded-full" animate={{ width: `${Math.min(progress, 100)}%` }}
+                style={{ background: cracked ? "#ef4444" : idx >= 3 ? "#22c55e" : current.color }} />
+            </div>
+          </div>
+
+          {/* Time result */}
+          <AnimatePresence mode="wait">
+            {!cracking && (
+              <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className="flex items-center justify-between pt-4 border-t border-gray-800">
+                <span className="text-gray-400">Kırılma süresi:</span>
+                <span className="text-2xl font-black" style={{ color: current.color }}>{current.time}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Status indicators */}
+        <div className="flex justify-center gap-3 mt-6">
+          {CRACK_PASSWORDS.map((p, i) => (
+            <motion.div key={i} className="w-3 h-3 rounded-full" animate={{ scale: i === idx ? [1, 1.4, 1] : 1 }}
+              transition={i === idx ? { repeat: Infinity, duration: 1 } : {}}
+              style={{ background: i < idx ? (i < 3 ? "#ef4444" : "#22c55e") : i === idx ? current.color : "#374151" }} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ================================================================
+   AUTO-PLAY: DEEPFAKE VOICE CLONE
+   ================================================================ */
+function AutoDeepfakeSim({ isActive }: { isActive: boolean }) {
+  const [phase, setPhase] = useState<"idle" | "real" | "clone" | "compare" | "lesson">("idle");
+
+  useEffect(() => {
+    if (!isActive) { setPhase("idle"); return; }
+    setPhase("real");
+  }, [isActive]);
+
+  useEffect(() => {
+    if (phase === "real") { const t = setTimeout(() => setPhase("clone"), 3500); return () => clearTimeout(t); }
+    if (phase === "clone") { const t = setTimeout(() => setPhase("compare"), 3500); return () => clearTimeout(t); }
+    if (phase === "compare") { const t = setTimeout(() => setPhase("lesson"), 4000); return () => clearTimeout(t); }
+  }, [phase]);
+
+  if (phase === "idle") return null;
+
+  const WaveBar = ({ color, speed = 0.5 }: { color: string; speed?: number }) => (
+    <div className="flex items-center justify-center gap-1 h-16">
+      {[...Array(20)].map((_, i) => (
+        <motion.div key={i} animate={{ height: [6, 40 + Math.sin(i) * 20, 6] }}
+          transition={{ repeat: Infinity, duration: speed, delay: i * 0.05 }}
+          className="w-1.5 rounded-full" style={{ background: color }} />
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full px-8 text-center">
+      <h2 className="text-4xl sm:text-5xl font-bold mb-10">🎭 Deepfake Ses Klonlama</h2>
+      <div className="w-full max-w-3xl">
+        <AnimatePresence mode="wait">
+          {phase === "real" && (
+            <motion.div key="real" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center text-3xl">👧</div>
+                <div className="text-left">
+                  <p className="text-emerald-400 font-bold text-xl">Gerçek Ses — Kızınız Elif</p>
+                  <p className="text-gray-500 text-sm">3 saniyelik Instagram hikayesinden alındı</p>
+                </div>
+              </div>
+              <WaveBar color="#10b981" speed={0.6} />
+              <p className="text-gray-300 text-xl mt-4 italic">&quot;Merhaba baba, bugün çok güzel bir gün!&quot;</p>
+            </motion.div>
+          )}
+
+          {phase === "clone" && (
+            <motion.div key="clone" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              className="bg-red-900/20 border border-red-500/30 rounded-2xl p-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center text-3xl">
+                  <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 0.8 }}>🤖</motion.span>
+                </div>
+                <div className="text-left">
+                  <p className="text-red-400 font-bold text-xl">Klonlanmış Ses — Yapay Zeka</p>
+                  <p className="text-gray-500 text-sm">3 saniye yeterli · %95 benzerlik</p>
+                </div>
+              </div>
+              <WaveBar color="#ef4444" speed={0.55} />
+              <p className="text-gray-300 text-xl mt-4 italic">&quot;Baba, kaza yaptım! Acil para lazım, hemen gönder!&quot;</p>
+            </motion.div>
+          )}
+
+          {phase === "compare" && (
+            <motion.div key="compare" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="grid grid-cols-2 gap-6">
+              <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-6 text-center">
+                <p className="text-emerald-400 font-bold text-xl mb-3">✅ Gerçek Ses</p>
+                <WaveBar color="#10b981" speed={0.6} />
+                <p className="text-3xl font-black text-emerald-400 mt-3">%100</p>
+              </div>
+              <div className="bg-red-900/20 border border-red-500/30 rounded-2xl p-6 text-center">
+                <p className="text-red-400 font-bold text-xl mb-3">❌ Klonlanmış</p>
+                <WaveBar color="#ef4444" speed={0.55} />
+                <p className="text-3xl font-black text-red-400 mt-3">%95</p>
+              </div>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+                className="col-span-2 bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4 text-center">
+                <p className="text-yellow-400 text-xl font-bold">İnsan kulağı farkı ayırt edemiyor!</p>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {phase === "lesson" && (
+            <motion.div key="lesson" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              className="bg-white/5 border border-white/10 rounded-2xl p-8">
+              <p className="text-3xl font-bold text-emerald-400 mb-4">🛡️ Nasıl Korunursunuz?</p>
+              <div className="space-y-3 text-left">
+                {[
+                  { e: "🔑", t: "Aile güvenlik parolası belirleyin — telefonda para isteyene sorun" },
+                  { e: "📵", t: "Sosyal medyada sesli/videolu içeriklerinizi sınırlı paylaşın" },
+                  { e: "📞", t: "Şüphelenin → kapatın → bilinen numaradan kendiniz arayın" },
+                ].map((item, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }}
+                    className="flex items-start gap-3">
+                    <span className="text-2xl shrink-0">{item.e}</span>
+                    <p className="text-xl text-gray-300">{item.t}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+/* ================================================================
+   AUTO-PLAY: WHATSAPP SCAM
+   ================================================================ */
+function AutoWhatsAppSim({ isActive }: { isActive: boolean }) {
+  const [msgs, setMsgs] = useState(0);
+  const [phase, setPhase] = useState<"idle" | "chat" | "hack" | "lesson">("idle");
+
+  const MESSAGES = [
+    { from: "them", text: "Merhaba! Google şirketinden arıyoruz 🌍", time: "14:23" },
+    { from: "them", text: "Video beğenerek günlük 500-2000₺ kazanabilirsiniz! İlk görev ÜCRETSİZ", time: "14:23" },
+    { from: "them", text: "İşte ilk göreviniz: Bu linke tıklayın 👉 bit.ly/gorev-kazan", time: "14:24" },
+    { from: "you", text: "Tamam ilginç, bakayım", time: "14:25" },
+    { from: "them", text: "Tebrikler! 250₺ kazandınız! 🎉 Çekmek için 5000₺ teminat yatırın", time: "14:26" },
+  ];
+
+  useEffect(() => {
+    if (!isActive) { setPhase("idle"); setMsgs(0); return; }
+    setPhase("chat"); setMsgs(0);
+  }, [isActive]);
+
+  useEffect(() => {
+    if (phase === "chat" && msgs < MESSAGES.length) {
+      const t = setTimeout(() => setMsgs(p => p + 1), 1500);
+      return () => clearTimeout(t);
+    }
+    if (phase === "chat" && msgs >= MESSAGES.length) {
+      const t = setTimeout(() => setPhase("hack"), 2000);
+      return () => clearTimeout(t);
+    }
+    if (phase === "hack") {
+      const t = setTimeout(() => setPhase("lesson"), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [phase, msgs]);
+
+  if (phase === "idle") return null;
+  return (
+    <div className="flex flex-col items-center justify-center h-full px-8 text-center">
+      <h2 className="text-4xl sm:text-5xl font-bold mb-8">💬 WhatsApp Dolandırıcılığı</h2>
+      <div className="w-full max-w-md">
+        <AnimatePresence mode="wait">
+          {phase === "chat" && (
+            <motion.div key="chat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="bg-[#0b141a] rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+              {/* WhatsApp header */}
+              <div className="bg-[#1f2c34] px-4 py-3 flex items-center gap-3">
+                <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-lg">🌍</div>
+                <div><p className="text-white font-medium text-sm">+91 98XX XXXX XX</p><p className="text-emerald-400 text-xs">online</p></div>
+              </div>
+              {/* Messages */}
+              <div className="p-4 space-y-2 min-h-[280px]">
+                {MESSAGES.slice(0, msgs).map((msg, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, y: 10, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                    className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${msg.from === "them"
+                      ? "bg-[#1f2c34] text-gray-200 mr-auto" : "bg-[#005c4b] text-white ml-auto"}`}>
+                    <p>{msg.text}</p>
+                    <p className="text-[10px] text-gray-500 text-right mt-1">{msg.time}</p>
+                  </motion.div>
+                ))}
+                {msgs < MESSAGES.length && (
+                  <div className="bg-[#1f2c34] text-gray-400 text-xs rounded-xl px-3 py-2 w-16 mr-auto">
+                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }}>yazıyor...</motion.span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {phase === "hack" && (
+            <motion.div key="hack" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+              className="bg-red-900/30 border border-red-500/30 rounded-2xl p-8">
+              <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 0.6 }}
+                className="text-6xl block mb-4">⚠️</motion.span>
+              <p className="text-2xl font-bold text-red-400 mb-2">GhostPairing Saldırısı!</p>
+              <p className="text-lg text-gray-300">Linke tıkladığınız an WhatsApp hesabınız ele geçirildi. Rehberinizdeki herkese aynı mesaj gönderiliyor...</p>
+            </motion.div>
+          )}
+
+          {phase === "lesson" && (
+            <motion.div key="lesson" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="bg-white/5 border border-white/10 rounded-2xl p-8">
+              <p className="text-2xl font-bold text-emerald-400 mb-4">🛡️ Korunma</p>
+              <div className="space-y-3 text-left">
+                <p className="text-lg text-gray-300">🚫 Tanımadığınız numaralara yanıt vermeyin</p>
+                <p className="text-lg text-gray-300">🔗 Bilinmeyen linklere asla tıklamayın</p>
+                <p className="text-lg text-gray-300">📊 WhatsApp 2025&apos;te 6.8M dolandırıcı hesap kapattı</p>
+                <p className="text-lg text-yellow-400 font-bold mt-2">İş veren para istemez — öder!</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+/* ================================================================
    SECTION DEFINITIONS (for navigation)
    ================================================================ */
 const SECTIONS = [
@@ -567,33 +896,7 @@ const slides: Slide[] = [
   // ── BÖLÜM 2: ŞİFRE GÜVENLİĞİ ──
   { id: "sec-sifre", section: "Şifre Güvenliği", sectionIndex: 2, content: <SectionTitle icon="🔐" title="Şifre Güvenliği" subtitle="Tek şifre = Domino etkisi" color="#0ea5e9" /> },
 
-  { id: "password-crack", content: (
-    <div className="flex flex-col items-center justify-center h-full px-8 sm:px-16 text-center">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-4 mb-8">
-        <span className="text-5xl">⏱️</span><h2 className="text-4xl sm:text-5xl font-bold">Şifreniz Ne Kadar Sürede Kırılır?</h2>
-      </motion.div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-6xl">
-        {[
-          { len: "4 karakter", time: "Anında", color: "bg-red-600", ex: "1234" },
-          { len: "6 karakter", time: "5 saniye", color: "bg-red-500", ex: "abc123" },
-          { len: "8 karışık", time: "7 dakika", color: "bg-orange-500", ex: "Kalem42!" },
-          { len: "10 karışık", time: "6 ay", color: "bg-yellow-500", ex: "K@le3m_52!" },
-          { len: "12 karışık", time: "3.000 yıl", color: "bg-green-500", ex: "Tr#n85_kL!m2" },
-          { len: "14 karakter", time: "800K yıl", color: "bg-green-600", ex: "S!m@v_MYO_2026" },
-          { len: "16+ karakter", time: "Milyarlarca", color: "bg-emerald-600", ex: "Passphrase" },
-          { len: "Cümle şifre", time: "∞", color: "bg-emerald-700", ex: "BenSimavda!" },
-        ].map((item, i) => (
-          <motion.div key={i} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.08 * i, type: "spring" }}
-            className={`${item.color} rounded-2xl p-5 text-center text-white shadow-lg`}>
-            <p className="font-bold text-sm">{item.len}</p>
-            <p className="text-3xl sm:text-4xl font-black my-2">{item.time}</p>
-            <p className="text-xs opacity-80 font-mono">{item.ex}</p>
-          </motion.div>
-        ))}
-      </div>
-      <p className="text-sm text-gray-500 italic mt-4">Kaynak: Hive Systems 2024 — Şifre yöneticisi + 2FA kullanın!</p>
-    </div>
-  )},
+  { id: "password-crack", content: (isActive: boolean) => <AutoPasswordCrack isActive={isActive} /> },
 
   { id: "2fa", content: <TwoColumnSlide title="İki Faktörlü Doğrulama (2FA)" icon="📲"
     left={{ title: "SMS ile 2FA (Riskli)", items: ["SIM Swap saldırısına açık", "SMS ele geçirilebilir", "Operatör sosyal mühendisliği", "Hiç yoktan iyidir ama..."] }}
@@ -624,19 +927,9 @@ const slides: Slide[] = [
   // ── BÖLÜM 4: YAPAY ZEKA TEHDİTLERİ ──
   { id: "sec-ai", section: "Yapay Zeka Tehditleri", sectionIndex: 4, content: <SectionTitle icon="🤖" title="Yapay Zeka Tehditleri" subtitle="Deepfake, ses klonlama ve akıllı dolandırıcılık" color="#a855f7" /> },
 
-  { id: "deepfake", content: <BulletSlide title="Deepfake ve Yapay Zeka" icon="🎭" items={[
-    { emoji: "🎙️", text: "Ses klonlama: 3 saniyelik kayıtla birebir kopya — dünyada 8 milyon deepfake tespit edildi" },
-    { emoji: "📹", text: "Gerçek zamanlı yüz değiştirme: Video aramalarda bile sahte kimlik — banka KYC'ler atlatılıyor" },
-    { emoji: "💬", text: "Yapay zeka ile kusursuz Türkçe dolandırıcılık mesajları — yazım hatası yok, kişiye özel" },
-    { emoji: "🛡️", text: "Aile güvenlik parolası belirleyin — 'Anne acil para lazım' diyene sorun: 'Parolamız ne?'" },
-  ]} /> },
+  { id: "deepfake", content: (isActive: boolean) => <AutoDeepfakeSim isActive={isActive} /> },
 
-  { id: "whatsapp-fraud", content: <BulletSlide title="WhatsApp Dolandırıcılığı" icon="💬" items={[
-    { emoji: "🌍", text: "Yabancı numaralardan 'Google/YouTube'da çalış, para kazan' mesajları" },
-    { emoji: "👻", text: "GhostPairing: 'Bu sen misin?' linkine tıklayınca hesabınız ele geçiriliyor" },
-    { emoji: "📞", text: "'Numaram değişti' mesajıyla acil para talebi — ses doğrulama bile sahte olabilir" },
-    { emoji: "📊", text: "WhatsApp 2025'te 6.8 milyon dolandırıcılık hesabını kapattı" },
-  ]} note="Tanımadığınız numaralardan gelen mesajlara yanıt vermeyin" /> },
+  { id: "whatsapp-fraud", content: (isActive: boolean) => <AutoWhatsAppSim isActive={isActive} /> },
 
   // ── BÖLÜM 5: BAHİS & VERİ PANELLERİ ──
   { id: "sec-bahis", section: "Bahis & Veri Panelleri", sectionIndex: 5, content: <SectionTitle icon="🎰" title="Sanal Bahis & Veri Panelleri" subtitle="'Kolay para' vaadi — pahalı ders" color="#f59e0b" /> },
