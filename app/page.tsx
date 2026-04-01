@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 interface Slide {
   id: string;
   section?: string;
-  sectionIndex?: number;
   content: React.ReactNode | ((isActive: boolean) => React.ReactNode);
 }
 
@@ -171,7 +170,8 @@ function BulletSlide({ title, icon, items, note }: { title: string; icon: string
 function AnimatedStat({ value, label, color, delay }: { value: string; label: string; color: string; delay: number }) {
   const animated = useCountUp(value, 1500, delay * 1000);
   return (
-    <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay, duration: 0.5 }} className="text-center">
+    <motion.div initial={{ opacity: 0, y: 40, scale: 0.8 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay, duration: 0.6, type: "spring", stiffness: 100 }} className="text-center">
       <p className="text-7xl sm:text-8xl font-black font-mono mb-3" style={{ color, textShadow: `0 0 15px ${color}50, 0 0 40px ${color}20` }}>{animated}</p>
       <p className="text-xl text-gray-400 max-w-[200px]">{label}</p>
     </motion.div>
@@ -632,21 +632,37 @@ const SECTIONS = [
 const slides: Slide[] = [
 
   // ── AÇILIŞ ──
-  { id: "cover", sectionIndex: 0, content: (
-    <div className="flex flex-col items-center justify-center h-full text-center px-8">
-      <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
-        <span className="text-lg font-mono text-emerald-400 uppercase tracking-[0.3em]">Simav Meslek Yüksekokulu</span>
-      </motion.div>
-      <motion.h1 initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
-        className="text-6xl sm:text-8xl font-black tracking-tight mb-8">
-        <span className="text-shimmer">Siber Güvenlik</span><br /><span className="text-white">Farkındalık Etkinliği</span>
-      </motion.h1>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-        className="text-xl text-gray-400 max-w-3xl mb-10">Oltalama · Şifre güvenliği · Sosyal mühendislik · Yapay zeka tehditleri · Sanal bahis · Siber zorbalık</motion.p>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-        <p className="text-gray-300 text-xl font-bold">Öğr. Gör. Osman Can Çetlenbik</p>
-        <p className="text-gray-500 text-base mt-1">Bilgisayar Mühendisi — Manisa Celal Bayar Üniversitesi</p>
-      </motion.div>
+  { id: "cover", content: (
+    <div className="flex flex-col items-center justify-center h-full text-center px-8 relative">
+      {/* Animated rings behind title */}
+      <motion.div className="absolute w-[600px] h-[600px] rounded-full border border-emerald-500/10"
+        animate={{ scale: [0.8, 1.1, 0.8], opacity: [0.2, 0.5, 0.2] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }} />
+      <motion.div className="absolute w-[400px] h-[400px] rounded-full border border-cyan-500/10"
+        animate={{ scale: [1.1, 0.8, 1.1], opacity: [0.3, 0.5, 0.3] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} />
+      <div className="relative z-10 flex flex-col items-center">
+        <motion.div initial={{ opacity: 0, y: -30, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8 }} className="mb-4">
+          <span className="text-lg font-mono text-emerald-400 uppercase tracking-[0.3em]" style={{ textShadow: "0 0 10px rgba(0,255,65,0.3)" }}>Simav Meslek Yüksekokulu</span>
+        </motion.div>
+        <motion.h1 initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="text-6xl sm:text-8xl font-black tracking-tight mb-4">
+          <span className="text-shimmer">Siber Güvenlik</span>
+        </motion.h1>
+        <motion.h1 initial={{ opacity: 0, y: 20, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="text-5xl sm:text-7xl font-black tracking-tight text-white mb-6">
+          Farkındalık Etkinliği
+        </motion.h1>
+        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
+          className="h-[2px] w-40 mb-8 rounded-full" style={{ background: "linear-gradient(90deg, transparent, #00ff41, #0ea5e9, transparent)", boxShadow: "0 0 15px rgba(0,255,65,0.3)" }} />
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
+          className="text-xl text-gray-400 max-w-3xl mb-10">Oltalama · Şifre güvenliği · Sosyal mühendislik · Yapay zeka · Sanal bahis · Siber zorbalık</motion.p>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
+          <p className="text-gray-300 text-xl font-bold">Öğr. Gör. Osman Can Çetlenbik</p>
+          <p className="text-gray-500 text-base mt-1">Bilgisayar Mühendisi — Manisa Celal Bayar Üniversitesi</p>
+        </motion.div>
+      </div>
     </div>
   )},
 
@@ -660,7 +676,7 @@ const slides: Slide[] = [
   { id: "quote-intro", content: <QuoteSlide emoji="🧠" quote="En güçlü güvenlik duvarı bile, içerideki biri kapıyı açarsa işe yaramaz." author="Sosyal Mühendislik Gerçeği" /> },
 
   // ── BÖLÜM 1: OLTALAMA ──
-  { id: "sec-oltalama", section: "Oltalama", sectionIndex: 1, content: <SectionTitle icon="🎣" title="Oltalama Saldırıları" subtitle="Saldırganların en yaygın silahı: Sahte mesajlar" color="#ef4444" /> },
+  { id: "sec-oltalama", section: "Oltalama", content: <SectionTitle icon="🎣" title="Oltalama Saldırıları" subtitle="Saldırganların en yaygın silahı: Sahte mesajlar" color="#ef4444" /> },
 
   { id: "phishing-types", content: <BulletSlide title="Oltalama Türleri" icon="📧" items={[
     { emoji: "📧", text: "E-posta: Sahte CEO, banka veya kargo — aciliyet ve korku yaratır" },
@@ -768,7 +784,7 @@ const slides: Slide[] = [
   { id: "sim-kargo-auto", content: (isActive: boolean) => <AutoKargoSim isActive={isActive} /> },
 
   // ── BÖLÜM 2: ŞİFRE GÜVENLİĞİ ──
-  { id: "sec-sifre", section: "Şifre Güvenliği", sectionIndex: 2, content: <SectionTitle icon="🔐" title="Şifre Güvenliği" subtitle="Tek şifre = Domino etkisi" color="#0ea5e9" /> },
+  { id: "sec-sifre", section: "Şifre Güvenliği", content: <SectionTitle icon="🔐" title="Şifre Güvenliği" subtitle="Tek şifre = Domino etkisi" color="#0ea5e9" /> },
 
   { id: "password-crack", content: (isActive: boolean) => <AutoPasswordCrack isActive={isActive} /> },
 
@@ -778,7 +794,7 @@ const slides: Slide[] = [
   /> },
 
   // ── BÖLÜM 3: SOSYAL MÜHENDİSLİK ──
-  { id: "sec-se", section: "Sosyal Mühendislik", sectionIndex: 3, content: <SectionTitle icon="🎭" title="Sosyal Mühendislik" subtitle="İnsanlar hacklenmiyor, ikna ediliyor" color="#ef4444" /> },
+  { id: "sec-se", section: "Sosyal Mühendislik", content: <SectionTitle icon="🎭" title="Sosyal Mühendislik" subtitle="İnsanlar hacklenmiyor, ikna ediliyor" color="#ef4444" /> },
 
   { id: "se-weapons", content: <BulletSlide title="Saldırganın Silahları" icon="⚔️" items={[
     { emoji: "👮", text: "Otorite Baskısı: 'Ben komiserim, hesabınız terör soruşturmasında'" },
@@ -797,12 +813,12 @@ const slides: Slide[] = [
   ]} /> },
 
   // ── BÖLÜM 4: YAPAY ZEKA TEHDİTLERİ ──
-  { id: "sec-ai", section: "Yapay Zeka Tehditleri", sectionIndex: 4, content: <SectionTitle icon="🤖" title="Yapay Zeka Tehditleri" subtitle="Deepfake, ses klonlama ve akıllı dolandırıcılık" color="#a855f7" /> },
+  { id: "sec-ai", section: "Yapay Zeka Tehditleri", content: <SectionTitle icon="🤖" title="Yapay Zeka Tehditleri" subtitle="Deepfake, ses klonlama ve akıllı dolandırıcılık" color="#a855f7" /> },
 
   { id: "whatsapp-fraud", content: (isActive: boolean) => <AutoWhatsAppSim isActive={isActive} /> },
 
   // ── BÖLÜM 5: BAHİS & VERİ PANELLERİ ──
-  { id: "sec-bahis", section: "Bahis & Veri Panelleri", sectionIndex: 5, content: <SectionTitle icon="🎰" title="Sanal Bahis & Veri Panelleri" subtitle="'Kolay para' vaadi — pahalı ders" color="#f59e0b" /> },
+  { id: "sec-bahis", section: "Bahis & Veri Panelleri", content: <SectionTitle icon="🎰" title="Sanal Bahis & Veri Panelleri" subtitle="'Kolay para' vaadi — pahalı ders" color="#f59e0b" /> },
 
   { id: "bahis-tuzak", content: <BulletSlide title="Yasadışı Bahis ve Kripto Tuzakları" icon="🚫" items={[
     { emoji: "📱", text: "Instagram/TikTok'ta 'garantili kupon', 'bedava bonus' — gençleri hedef alıyor" },
@@ -825,10 +841,10 @@ const slides: Slide[] = [
     { emoji: "📱", text: "SIM Swap: TC bilgilerinizle operatörden yeni SIM çıkartılır, SMS doğrulamanız çalınır" },
   ]} note="e-Devlet'ten adınıza açılmış şirket/hat olup olmadığını düzenli kontrol edin" /> },
 
-  { id: "sim-ponzi-auto", sectionIndex: 5, content: (isActive: boolean) => <AutoPonziSim isActive={isActive} /> },
+  { id: "sim-ponzi-auto", content: (isActive: boolean) => <AutoPonziSim isActive={isActive} /> },
 
   // ── BÖLÜM 6: SİBER ZORBALIK ──
-  { id: "sec-bully", section: "Siber Zorbalık", sectionIndex: 6, content: <SectionTitle icon="💔" title="Siber Zorbalık" subtitle="Ekranın arkasında da gerçek insanlar var" color="#a855f7" /> },
+  { id: "sec-bully", section: "Siber Zorbalık", content: <SectionTitle icon="💔" title="Siber Zorbalık" subtitle="Ekranın arkasında da gerçek insanlar var" color="#a855f7" /> },
 
   { id: "bully-stats", content: <StatSlide title="Siber Zorbalık — Türkiye" stats={[
     { value: "1/2", label: "Her 2 çocuktan biri zorbalık yapıyor (TÜBİTAK)", color: "#a855f7" },
@@ -843,7 +859,7 @@ const slides: Slide[] = [
   /> },
 
   // ── BÖLÜM 7: KENDİNİZİ KORUYUN ──
-  { id: "sec-protect", section: "Kendinizi Koruyun", sectionIndex: 7, content: <SectionTitle icon="🛡️" title="Kendinizi Koruyun" subtitle="Bugün uygulayabileceğiniz adımlar" color="#22c55e" /> },
+  { id: "sec-protect", section: "Kendinizi Koruyun", content: <SectionTitle icon="🛡️" title="Kendinizi Koruyun" subtitle="Bugün uygulayabileceğiniz adımlar" color="#22c55e" /> },
 
   { id: "wifi-simswap", content: <BulletSlide title="Wi-Fi ve SIM Swap Tehlikeleri" icon="📶" items={[
     { emoji: "☕", text: "Kafe/otel/havaalanı Wi-Fi'ına bağlanınca tüm trafiğiniz izlenebilir — Şeytani İkiz saldırısı" },
@@ -900,7 +916,7 @@ const slides: Slide[] = [
   )},
 
   // ── KAPANIŞ ──
-  { id: "live-try", sectionIndex: 8, content: (
+  { id: "live-try", content: (
     <div className="flex items-center justify-center h-full px-8 sm:px-16">
       <div className="flex flex-col sm:flex-row items-center gap-10 sm:gap-16 max-w-6xl w-full">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1, boxShadow: ["0 0 20px rgba(0,255,65,0.2)", "0 0 50px rgba(0,255,65,0.4)", "0 0 20px rgba(0,255,65,0.2)"] }}
@@ -922,7 +938,7 @@ const slides: Slide[] = [
     </div>
   )},
 
-  { id: "closing", sectionIndex: 8, content: (
+  { id: "closing", content: (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
       <motion.h1 initial={{ opacity: 0, y: 20, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         className="text-6xl sm:text-8xl font-black mb-3">Teşekkürler!</motion.h1>
@@ -1001,12 +1017,13 @@ export default function Presentation() {
     return 0;
   })();
 
+  const slideIdx = slides.indexOf(slide);
   const slideContent = typeof slide.content === "function"
-    ? slide.content(true)
+    ? slide.content(slideIdx === current)
     : slide.content;
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-black"
+    <div className="h-screen w-screen flex items-center justify-center bg-black" suppressHydrationWarning
       onTouchStart={(e) => { touchRef.current = { x: e.touches[0].clientX }; }}
       onTouchEnd={(e) => {
         if (!touchRef.current) return;
