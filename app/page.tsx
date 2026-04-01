@@ -281,67 +281,6 @@ function QuizSlide({ question, options, correctIndex, explanation, isActive }: {
 /* ================================================================
    AUTO-PLAY SIMULATIONS
    ================================================================ */
-const HACK_LINES = [
-  "Hedef cihazlar taranıyor...", "IP: 85.103.██.███ (Kütahya/Simav)", "Tarayıcı: Chrome Mobil — Android 14",
-  "Rehber taranıyor... 1.247 kişi bulundu", "Fotoğraflar kopyalanıyor... 3.891 dosya", "WhatsApp mesajları okunuyor...",
-  "Banka uygulamaları tespit edildi: 3 adet", "Şifreler çıkartılıyor... 94 adet", "TÜM VERİLER ELE GEÇİRİLDİ!",
-];
-
-function AutoLiveHack({ isActive }: { isActive: boolean }) {
-  const [phase, setPhase] = useState<"idle" | "hack" | "reveal">("idle");
-  const [lines, setLines] = useState(0);
-  useEffect(() => { if (isActive) { setPhase("hack"); setLines(0); } else { setPhase("idle"); setLines(0); } }, [isActive]);
-  useEffect(() => {
-    if (phase === "hack" && lines < HACK_LINES.length) { const t = setTimeout(() => setLines(p => p + 1), 600); return () => clearTimeout(t); }
-    if (phase === "hack" && lines >= HACK_LINES.length) { const t = setTimeout(() => setPhase("reveal"), 2000); return () => clearTimeout(t); }
-  }, [phase, lines]);
-  if (phase === "idle") return null;
-  return (
-    <div className="flex flex-col h-full relative">
-      <AnimatePresence mode="wait">
-        {phase === "hack" && (
-          <motion.div key="hack" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col h-full" style={{ background: "#0a0000" }}>
-            <div className="absolute inset-0 crt-overlay z-10" />
-            <motion.div animate={{ backgroundColor: ["#dc2626", "#7f1d1d", "#dc2626"] }} transition={{ repeat: Infinity, duration: 1.2 }}
-              className="px-4 py-3 flex items-center justify-center gap-3 z-20">
-              <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 0.6 }}>⚠️</motion.span>
-              <span className="text-white font-bold text-xl tracking-widest uppercase">SALONDAKİ CİHAZLAR TARANIYOR</span>
-              <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 0.6 }}>⚠️</motion.span>
-            </motion.div>
-            <div className="flex-1 p-8 sm:p-14 font-mono max-w-4xl mx-auto w-full z-20">
-              <div className="flex items-center gap-2 mb-6 pb-3 border-b border-red-900/50">
-                <span className="text-red-500 animate-pulse text-sm">● REC</span>
-                <span className="text-red-700 text-sm">root@attacker:~#</span>
-              </div>
-              {HACK_LINES.slice(0, lines).map((line, i) => (
-                <motion.div key={i} initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} className="flex items-start gap-3 mb-3">
-                  <span className="text-red-700 text-xl">$</span>
-                  <span className={`text-xl terminal-glow ${i >= 6 ? "text-red-400" : "text-green-400"}`}>{line}</span>
-                </motion.div>
-              ))}
-              {lines < HACK_LINES.length && <div className="flex items-center gap-3"><span className="text-red-700">$</span><span className="w-2.5 h-5 bg-green-500 animate-pulse" /></div>}
-            </div>
-          </motion.div>
-        )}
-        {phase === "reveal" && (
-          <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center h-full px-8 text-center" style={{ background: "linear-gradient(180deg, #022c22, #050510)" }}>
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-[7rem] mb-6">🛡️</motion.div>
-            <h1 className="text-5xl sm:text-7xl font-black text-emerald-400 mb-4">RAHAT OLUN!</h1>
-            <p className="text-2xl text-emerald-300/70 mb-8">Kimse hacklenmedi. Bu sadece bir animasyondu.</p>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-3xl">
-              <p className="text-xl text-gray-200 leading-relaxed">
-                Ama az önce yaşadığınız o <strong className="text-white">tedirginlik</strong> — işte dolandırıcıların istediği tam olarak bu.
-                Panik halindeyken mantık devre dışı kalır. <strong className="text-emerald-300">Durun. Nefes alın. Düşünün.</strong>
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 function AutoKargoSim({ isActive }: { isActive: boolean }) {
   const [phase, setPhase] = useState<"idle" | "sms" | "site" | "trap" | "lesson">("idle");
   useEffect(() => { if (isActive) setPhase("sms"); else setPhase("idle"); }, [isActive]);
@@ -680,11 +619,11 @@ const SECTIONS = [
   { name: "Oltalama", start: 3 },
   { name: "Şifreler", start: 10 },
   { name: "Sosyal Müh.", start: 13 },
-  { name: "Yapay Zeka", start: 18 },
-  { name: "Bahis & Veri", start: 20 },
-  { name: "Zorbalık", start: 25 },
-  { name: "Korunma", start: 28 },
-  { name: "Kapanış", start: 33 },
+  { name: "Yapay Zeka", start: 17 },
+  { name: "Bahis & Veri", start: 19 },
+  { name: "Zorbalık", start: 24 },
+  { name: "Korunma", start: 27 },
+  { name: "Kapanış", start: 32 },
 ];
 
 /* ================================================================
@@ -791,12 +730,33 @@ const slides: Slide[] = [
     </div>
   )},
 
-  { id: "quishing", content: <BulletSlide title="QR Kod Tuzakları — Quishing" icon="📷" items={[
-    { emoji: "📈", text: "2025'te QR kodlu oltalama saldırıları 5 kat arttı — Kasım'da 249.000+ saldırı (Kaspersky)" },
-    { emoji: "🏪", text: "Restoran menüsü, otopark, durak — gerçek QR'ın üzerine sahte sticker yapıştırılıyor" },
-    { emoji: "💳", text: "Ödeme anında araya giren zararlı yazılım: Siz 50 TL öderken 5.000 TL çekiliyor" },
-    { emoji: "🛡️", text: "QR taramadan önce URL'yi kontrol edin — bilinmeyen sitelere kart bilgisi girmeyin" },
-  ]} note="e-Devlet'e SADECE turkiye.gov.tr yazarak girin. SMS linklerine asla tıklamayın" /> },
+  { id: "qr-trap", content: (
+    <div className="flex flex-col items-center justify-center h-full px-8 text-center">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <motion.span animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-6xl inline-block">📷</motion.span>
+      </motion.div>
+      <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+        className="text-5xl sm:text-7xl font-black mb-4" style={{ color: "#00ff41", textShadow: "0 0 20px rgba(0,255,65,0.4)" }}>
+        Canlı Deney: QR Kod Tuzağı
+      </motion.h1>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+        className="text-2xl text-gray-300 mb-8 max-w-2xl">
+        Telefonunuzu çıkarın ve bu QR kodu tarayın.<br />
+        <span className="text-yellow-400 font-bold">Bakalım ne olacak?</span>
+      </motion.p>
+      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+        transition={{ delay: 0.6, type: "spring", stiffness: 100 }}>
+        <motion.div
+          animate={{ boxShadow: ["0 0 20px rgba(0,255,65,0.2)", "0 0 60px rgba(0,255,65,0.5)", "0 0 20px rgba(0,255,65,0.2)"] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          className="bg-white p-8 rounded-3xl">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://hackleme-sanati.vercel.app/bolum/qr-kod-tuzagi" alt="QR Tuzağı" className="w-72 h-72 sm:w-80 sm:h-80" />
+        </motion.div>
+      </motion.div>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+        className="mt-6 text-lg text-gray-500 italic animate-pulse">350 kişi aynı anda tarasın...</motion.p>
+    </div>
+  )},
 
   { id: "quiz-phishing", content: (isActive: boolean) => <QuizSlide isActive={isActive}
     question="Aşağıdaki e-posta adreslerinden hangisi SAHTE?"
@@ -835,8 +795,6 @@ const slides: Slide[] = [
     { emoji: "🎙️", text: "2025: Deepfake ses klonlama %900 arttı — 3 saniyelik kayıtla ses birebir kopyalanıyor" },
     { emoji: "💾", text: "Şubat 2026: IDMerit sızıntısı — 49 milyon kişinin kimlik bilgileri açığa çıktı" },
   ]} /> },
-
-  { id: "live-hack-auto", content: (isActive: boolean) => <AutoLiveHack isActive={isActive} /> },
 
   // ── BÖLÜM 4: YAPAY ZEKA TEHDİTLERİ ──
   { id: "sec-ai", section: "Yapay Zeka Tehditleri", sectionIndex: 4, content: <SectionTitle icon="🤖" title="Yapay Zeka Tehditleri" subtitle="Deepfake, ses klonlama ve akıllı dolandırıcılık" color="#a855f7" /> },
