@@ -660,7 +660,7 @@ const slides: Slide[] = [
           className="text-xl text-gray-400 max-w-3xl mb-10">Oltalama · Şifre güvenliği · Sosyal mühendislik · Yapay zeka · Sanal bahis · Siber zorbalık</motion.p>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
           <p className="text-gray-300 text-xl font-bold">Öğr. Gör. Osman Can Çetlenbik</p>
-          <p className="text-gray-500 text-base mt-1">Bilgisayar Mühendisi — Manisa Celal Bayar Üniversitesi</p>
+          <p className="text-gray-500 text-base mt-1">Bilgisayar Mühendisi — MCBÜ Simav MYO</p>
         </motion.div>
       </div>
     </div>
