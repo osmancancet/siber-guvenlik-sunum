@@ -10,7 +10,7 @@
 
 ### Slide 1 — Kapak
 
-Herkese merhaba, hoş geldiniz. Ben Osman Can Çetlenbik. Simav Meslek Yüksekokulu'nda öğretim görevlisiyim, bugün Manisa Celal Bayar Üniversitesi'nde öğretim görevlisi olarak sizlerle birlikteyim. Bilgisayar mühendisiyim.
+Herkese merhaba, hoş geldiniz. Ben Osman Can Çetlenbik. Manisa Celal Bayar Üniversitesi Teknik Bilimler Meslek Yüksekokulu'nda öğretim görevlisiyim. Bilgisayar mühendisiyim.
 
 Bugün sizinle çok kritik bir konuyu konuşacağız: siber güvenlik farkındalığı. Bu sunum sizi hacker yapmak için değil, hacklenmeyen bireyler yapmak için hazırlandı. Bugün öğreneceğiniz bilgiler sadece sizin değil, ailelerinizin de parasını, kimliğini ve güvenliğini koruyacak.
 

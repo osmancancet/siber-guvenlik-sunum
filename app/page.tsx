@@ -642,7 +642,7 @@ const slides: Slide[] = [
       <div className="relative z-10 flex flex-col items-center">
         <motion.div initial={{ opacity: 0, y: -30, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8 }} className="mb-4">
-          <span className="text-lg font-mono text-emerald-400 uppercase tracking-[0.3em]" style={{ textShadow: "0 0 10px rgba(0,255,65,0.3)" }}>Simav Meslek Yüksekokulu</span>
+          <span className="text-lg font-mono text-emerald-400 uppercase tracking-[0.3em]" style={{ textShadow: "0 0 10px rgba(0,255,65,0.3)" }}>Manisa Celal Bayar Üniversitesi</span>
         </motion.div>
         <motion.h1 initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -660,7 +660,7 @@ const slides: Slide[] = [
           className="text-xl text-gray-400 max-w-3xl mb-10">Oltalama · Şifre güvenliği · Sosyal mühendislik · Yapay zeka · Sanal bahis · Siber zorbalık</motion.p>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
           <p className="text-gray-300 text-xl font-bold">Öğr. Gör. Osman Can Çetlenbik</p>
-          <p className="text-gray-500 text-base mt-1">Bilgisayar Mühendisi — MCBÜ Simav MYO</p>
+          <p className="text-gray-500 text-base mt-1">Manisa Celal Bayar Üniversitesi — Teknik Bilimler MYO</p>
         </motion.div>
       </div>
     </div>
