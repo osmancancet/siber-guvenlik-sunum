@@ -617,13 +617,13 @@ function AutoWhatsAppSim({ isActive }: { isActive: boolean }) {
 const SECTIONS = [
   { name: "Açılış", start: 0 },
   { name: "Oltalama", start: 3 },
-  { name: "Şifreler", start: 10 },
-  { name: "Sosyal Müh.", start: 13 },
-  { name: "Yapay Zeka", start: 17 },
-  { name: "Bahis & Veri", start: 19 },
-  { name: "Zorbalık", start: 24 },
-  { name: "Korunma", start: 27 },
-  { name: "Kapanış", start: 32 },
+  { name: "Şifreler", start: 11 },
+  { name: "Sosyal Müh.", start: 14 },
+  { name: "Yapay Zeka", start: 18 },
+  { name: "Bahis & Veri", start: 20 },
+  { name: "Zorbalık", start: 25 },
+  { name: "Korunma", start: 28 },
+  { name: "Kapanış", start: 33 },
 ];
 
 /* ================================================================
@@ -746,31 +746,35 @@ const slides: Slide[] = [
     </div>
   )},
 
-  { id: "qr-trap", content: (
+  { id: "qr-teaser", content: (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <motion.span animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-6xl inline-block">📷</motion.span>
-      </motion.div>
-      <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-        className="text-5xl sm:text-7xl font-black mb-4" style={{ color: "#00ff41", textShadow: "0 0 20px rgba(0,255,65,0.4)" }}>
-        Canlı Deney: QR Kod Tuzağı
+      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 100 }}
+        className="text-[7rem] mb-8">📱</motion.div>
+      <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+        className="text-6xl sm:text-8xl font-black mb-6" style={{ color: "#00ff41", textShadow: "0 0 30px rgba(0,255,65,0.5)" }}>
+        <GlitchText text="Canlı Deney" />
       </motion.h1>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-        className="text-2xl text-gray-300 mb-8 max-w-2xl">
-        Telefonunuzu çıkarın ve bu QR kodu tarayın.<br />
-        <span className="text-yellow-400 font-bold">Bakalım ne olacak?</span>
-      </motion.p>
-      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-        transition={{ delay: 0.6, type: "spring", stiffness: 100 }}>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+        className="text-2xl sm:text-3xl text-gray-300 mb-4 max-w-2xl">Telefonlarınızı çıkarın.</motion.p>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+        className="text-2xl sm:text-3xl text-yellow-400 font-bold">Bir sonraki ekrandaki QR kodu tarayın.</motion.p>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+        className="mt-8 text-xl text-gray-500 italic">Bakalım ne olacak...</motion.p>
+    </div>
+  )},
+
+  { id: "qr-fullscreen", content: (
+    <div className="flex items-center justify-center h-full w-full">
+      <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 80, damping: 12 }}>
         <motion.div
-          animate={{ boxShadow: ["0 0 20px rgba(0,255,65,0.2)", "0 0 60px rgba(0,255,65,0.5)", "0 0 20px rgba(0,255,65,0.2)"] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="bg-white p-8 rounded-3xl">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://hackleme-sanati.vercel.app/bolum/qr-kod-tuzagi" alt="QR Tuzağı" className="w-72 h-72 sm:w-80 sm:h-80" />
+          animate={{ boxShadow: ["0 0 30px rgba(0,255,65,0.15)", "0 0 80px rgba(0,255,65,0.4)", "0 0 30px rgba(0,255,65,0.15)"] }}
+          transition={{ repeat: Infinity, duration: 2.5 }}
+          className="bg-white p-10 rounded-3xl">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://hackleme-sanati.vercel.app/bolum/qr-kod-tuzagi"
+            alt="QR" className="w-[28rem] h-[28rem] sm:w-[32rem] sm:h-[32rem]" />
         </motion.div>
       </motion.div>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-        className="mt-6 text-lg text-gray-500 italic animate-pulse">350 kişi aynı anda tarasın...</motion.p>
     </div>
   )},
 
