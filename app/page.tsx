@@ -649,7 +649,7 @@ const slides: Slide[] = [
       <div className="relative z-10 flex flex-col items-center">
         <motion.div initial={{ opacity: 0, y: -30, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8 }} className="mb-4">
-          <span className="text-lg font-mono text-emerald-400 uppercase tracking-[0.3em]" style={{ textShadow: "0 0 10px rgba(0,255,65,0.3)" }}>Manisa Celal Bayar Üniversitesi</span>
+          <span className="text-lg font-mono text-emerald-400 uppercase tracking-[0.3em]" style={{ textShadow: "0 0 10px rgba(0,255,65,0.3)" }}>Simav Meslek Yüksekokulu</span>
         </motion.div>
         <motion.h1 initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
