@@ -397,11 +397,11 @@ function AutoPonziSim({ isActive }: { isActive: boolean }) {
    AUTO-PLAY: PASSWORD CRACKER
    ================================================================ */
 const CRACK_PASSWORDS = [
-  { pass: "123456", time: "0.001s", label: "6 rakam", color: "#ef4444" },
-  { pass: "ankara06", time: "0.3s", label: "8 harf+sayı", color: "#f97316" },
-  { pass: "Kalem42!", time: "7 dk", label: "8 karışık", color: "#eab308" },
-  { pass: "Tr#n85_kL!m2", time: "3.000 yıl", label: "12 karışık", color: "#22c55e" },
-  { pass: "BenSimavdaYasiyorum!", time: "∞", label: "Cümle şifre", color: "#10b981" },
+  { pass: "123456", time: "Anında", timeDetail: "0.001 saniye", label: "6 rakam", color: "#ef4444" },
+  { pass: "ankara06", time: "0.3 saniye", timeDetail: "Yarım saniye bile değil", label: "8 harf+sayı", color: "#f97316" },
+  { pass: "Kalem42!", time: "7 dakika", timeDetail: "Bir kahve molası kadar", label: "8 karışık", color: "#eab308" },
+  { pass: "Tr#n85_kL!m2", time: "3.000 yıl", timeDetail: "Kırılamadı!", label: "12 karışık", color: "#22c55e" },
+  { pass: "BenSimavdaYasiyorum!", time: "∞ Sonsuz", timeDetail: "Kırılması imkansız!", label: "Cümle şifre", color: "#10b981" },
 ];
 
 function AutoPasswordCrack({ isActive }: { isActive: boolean }) {
@@ -413,23 +413,21 @@ function AutoPasswordCrack({ isActive }: { isActive: boolean }) {
 
   useEffect(() => {
     if (!isActive) { setIdx(-1); setCracking(false); setProgress(0); setCracked(false); return; }
-    const t = setTimeout(() => setIdx(0), 800);
+    const t = setTimeout(() => setIdx(0), 1200);
     return () => clearTimeout(t);
   }, [isActive]);
 
-  // Start cracking when idx changes
   useEffect(() => {
     if (idx < 0 || idx >= CRACK_PASSWORDS.length) return;
     setCracking(true); setProgress(0); setCracked(false);
     setMasked("*".repeat(CRACK_PASSWORDS[idx].pass.length));
   }, [idx]);
 
-  // Progress animation
   useEffect(() => {
     if (!cracking) return;
     const isWeak = idx < 3;
-    const speed = isWeak ? 25 : 60;
-    const maxProg = isWeak ? 100 : (idx === 3 ? 12 : 3);
+    const speed = isWeak ? 45 : 80;
+    const maxProg = isWeak ? 100 : (idx === 3 ? 15 : 5);
     const iv = setInterval(() => {
       setProgress(p => {
         if (p >= maxProg) {
@@ -437,24 +435,22 @@ function AutoPasswordCrack({ isActive }: { isActive: boolean }) {
           setCracking(false);
           setCracked(isWeak);
           if (isWeak) setMasked(CRACK_PASSWORDS[idx].pass);
-          // Next password after delay
-          setTimeout(() => { if (idx < CRACK_PASSWORDS.length - 1) setIdx(i => i + 1); }, 2000);
+          setTimeout(() => { if (idx < CRACK_PASSWORDS.length - 1) setIdx(i => i + 1); }, 4000);
           return maxProg;
         }
-        return p + 2;
+        return p + 1;
       });
     }, speed);
     return () => clearInterval(iv);
   }, [cracking, idx]);
 
-  // Randomize masked text while cracking
   useEffect(() => {
     if (!cracking || idx < 0) return;
-    const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%&";
     const iv = setInterval(() => {
       const len = CRACK_PASSWORDS[idx].pass.length;
       setMasked(Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join(""));
-    }, 50);
+    }, 60);
     return () => clearInterval(iv);
   }, [cracking, idx]);
 
@@ -462,52 +458,63 @@ function AutoPasswordCrack({ isActive }: { isActive: boolean }) {
   const current = CRACK_PASSWORDS[idx];
   return (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <h2 className="text-4xl sm:text-5xl font-bold mb-10">🔓 Şifreniz Ne Kadar Sürede Kırılır?</h2>
-      <div className="w-full max-w-2xl">
-        {/* Terminal-style display */}
-        <div className="bg-black/80 border border-emerald-500/30 rounded-2xl p-8 font-mono shadow-2xl">
-          {/* Password display */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-gray-500 text-sm">Hedef şifre:</span>
-            <span className="text-emerald-400/50 text-sm">{current.label}</span>
+      <h2 className="text-4xl sm:text-5xl font-bold mb-8">🔓 Şifreniz Ne Kadar Sürede Kırılır?</h2>
+      <div className="w-full max-w-3xl">
+        <div className="bg-black/80 border border-emerald-500/30 rounded-2xl p-8 font-mono shadow-2xl glow-border-green">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-gray-500 text-base">Hedef şifre:</span>
+            <span className="text-emerald-400/60 text-base font-bold">{current.label}</span>
           </div>
-          <div className="bg-black rounded-xl px-6 py-4 mb-6 border border-gray-800">
-            <motion.p key={masked} className="text-3xl sm:text-4xl font-bold tracking-widest text-center"
-              style={{ color: cracked ? "#ef4444" : cracking ? "#00ff41" : "#6b7280" }}>
+          {/* Password display */}
+          <div className="bg-black rounded-xl px-6 py-5 mb-6 border border-gray-800">
+            <motion.p key={masked} className="text-4xl sm:text-5xl font-bold tracking-widest text-center"
+              style={{ color: cracked ? "#ef4444" : cracking ? "#00ff41" : "#6b7280",
+                textShadow: cracking ? "0 0 10px rgba(0,255,65,0.4)" : cracked ? "0 0 10px rgba(239,68,68,0.4)" : "none" }}>
               {masked}
             </motion.p>
           </div>
 
           {/* Progress bar */}
-          <div className="mb-4">
-            <div className="flex justify-between text-sm mb-1">
+          <div className="mb-6">
+            <div className="flex justify-between text-base mb-2">
               <span className="text-gray-400">Brute-force ilerleme</span>
-              <span style={{ color: current.color }}>{cracking ? `${Math.min(progress, 100)}%` : cracked ? "KIR ILDI!" : `${progress}% — Yeterli süre yok`}</span>
+              <span className="font-bold" style={{ color: current.color }}>
+                {cracking ? `${Math.min(progress, 100)}%` : cracked ? "KIRILDI!" : `${progress}% — Durdu`}
+              </span>
             </div>
-            <div className="w-full bg-gray-800 rounded-full h-3">
-              <motion.div className="h-3 rounded-full" animate={{ width: `${Math.min(progress, 100)}%` }}
-                style={{ background: cracked ? "#ef4444" : idx >= 3 ? "#22c55e" : current.color }} />
+            <div className="w-full bg-gray-800 rounded-full h-4">
+              <motion.div className="h-4 rounded-full transition-all duration-100" animate={{ width: `${Math.min(progress, 100)}%` }}
+                style={{ background: cracked ? "#ef4444" : idx >= 3 ? "#22c55e" : current.color,
+                  boxShadow: cracking ? `0 0 10px ${current.color}60` : "none" }} />
             </div>
           </div>
 
-          {/* Time result */}
+          {/* BIG time result */}
           <AnimatePresence mode="wait">
             {!cracking && (
-              <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-between pt-4 border-t border-gray-800">
-                <span className="text-gray-400">Kırılma süresi:</span>
-                <span className="text-2xl font-black" style={{ color: current.color }}>{current.time}</span>
+              <motion.div key={idx} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: "spring", stiffness: 120 }}
+                className="pt-5 border-t border-gray-700 text-center">
+                <p className="text-gray-500 text-base mb-2">Kırılma süresi</p>
+                <p className="text-5xl sm:text-6xl font-black mb-2" style={{ color: current.color,
+                  textShadow: `0 0 20px ${current.color}50` }}>{current.time}</p>
+                <p className="text-xl" style={{ color: current.color + "99" }}>{current.timeDetail}</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Status indicators */}
-        <div className="flex justify-center gap-3 mt-6">
+        {/* Status dots */}
+        <div className="flex justify-center gap-4 mt-6">
           {CRACK_PASSWORDS.map((p, i) => (
-            <motion.div key={i} className="w-3 h-3 rounded-full" animate={{ scale: i === idx ? [1, 1.4, 1] : 1 }}
-              transition={i === idx ? { repeat: Infinity, duration: 1 } : {}}
-              style={{ background: i < idx ? (i < 3 ? "#ef4444" : "#22c55e") : i === idx ? current.color : "#374151" }} />
+            <div key={i} className="flex flex-col items-center gap-1">
+              <motion.div className="w-4 h-4 rounded-full" animate={{ scale: i === idx ? [1, 1.5, 1] : 1 }}
+                transition={i === idx ? { repeat: Infinity, duration: 1 } : {}}
+                style={{ background: i < idx ? (i < 3 ? "#ef4444" : "#22c55e") : i === idx ? current.color : "#374151",
+                  boxShadow: i === idx ? `0 0 8px ${current.color}` : "none" }} />
+              <span className="text-xs text-gray-600">{p.label}</span>
+            </div>
           ))}
         </div>
       </div>
