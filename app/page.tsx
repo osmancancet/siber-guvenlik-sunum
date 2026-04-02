@@ -140,7 +140,7 @@ function SectionTitle({ icon, title, subtitle, color = "#00ff41" }: { icon: stri
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="h-[3px] w-60 mb-8 rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)`, boxShadow: `0 0 15px ${color}40` }} />
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-          className="text-2xl text-gray-300 max-w-4xl">{subtitle}</motion.p>
+          className="text-3xl text-gray-300 max-w-4xl">{subtitle}</motion.p>
       </div>
     </div>
   );
@@ -150,19 +150,19 @@ function BulletSlide({ title, icon, items, note }: { title: string; icon: string
   return (
     <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-5 mb-10">
-        <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-5xl">{icon}</motion.span>
-        <h2 className="text-4xl sm:text-5xl font-bold text-center">{title}</h2>
+        <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-6xl">{icon}</motion.span>
+        <h2 className="text-5xl sm:text-6xl font-bold text-center">{title}</h2>
       </motion.div>
       <div className="space-y-4 w-full max-w-6xl">
         {items.map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.12 * (i + 1), type: "spring", stiffness: 80 }}
             className="flex items-start gap-5 border-l-4 border-emerald-500/50 bg-white/[0.03] backdrop-blur-sm rounded-r-xl pl-8 py-5 glow-border-green">
-            <span className="text-3xl shrink-0">{item.emoji}</span>
-            <p className="text-xl text-gray-200 leading-relaxed">{item.text}</p>
+            <span className="text-4xl shrink-0">{item.emoji}</span>
+            <p className="text-2xl text-gray-200 leading-relaxed">{item.text}</p>
           </motion.div>
         ))}
       </div>
-      {note && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 text-base text-gray-500 italic text-center max-w-4xl">{note}</motion.p>}
+      {note && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 text-lg text-gray-500 italic text-center max-w-4xl">{note}</motion.p>}
     </div>
   );
 }
@@ -172,8 +172,8 @@ function AnimatedStat({ value, label, color, delay }: { value: string; label: st
   return (
     <motion.div initial={{ opacity: 0, y: 40, scale: 0.8 }} animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay, duration: 0.6, type: "spring", stiffness: 100 }} className="text-center">
-      <p className="text-7xl sm:text-8xl font-black font-mono mb-3" style={{ color, textShadow: `0 0 15px ${color}50, 0 0 40px ${color}20` }}>{animated}</p>
-      <p className="text-xl text-gray-400 max-w-[200px]">{label}</p>
+      <p className="text-8xl sm:text-9xl font-black font-mono mb-4" style={{ color, textShadow: `0 0 15px ${color}50, 0 0 40px ${color}20` }}>{animated}</p>
+      <p className="text-2xl text-gray-400 max-w-[240px]">{label}</p>
     </motion.div>
   );
 }
@@ -181,7 +181,7 @@ function AnimatedStat({ value, label, color, delay }: { value: string; label: st
 function StatSlide({ title, stats }: { title: string; stats: { value: string; label: string; color: string }[] }) {
   return (
     <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20">
-      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl sm:text-6xl font-bold mb-20 text-center">{title}</motion.h2>
+      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-5xl sm:text-7xl font-bold mb-20 text-center">{title}</motion.h2>
       <div className="flex flex-wrap items-start justify-center gap-14 sm:gap-24">
         {stats.map((s, i) => <AnimatedStat key={i} value={s.value} label={s.label} color={s.color} delay={0.25 * (i + 1)} />)}
       </div>
@@ -192,11 +192,11 @@ function StatSlide({ title, stats }: { title: string; stats: { value: string; la
 function QuoteSlide({ quote, author, emoji }: { quote: string; author: string; emoji: string }) {
   return (
     <div className="flex flex-col items-center justify-center h-full px-12 sm:px-24 text-center">
-      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-6xl mb-10">{emoji}</motion.span>
+      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-7xl mb-10">{emoji}</motion.span>
       <motion.blockquote initial={{ opacity: 0, y: 30, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ delay: 0.3, duration: 0.7 }}
-        className="text-3xl sm:text-5xl font-light italic text-gray-200 max-w-5xl leading-relaxed"
+        className="text-4xl sm:text-6xl font-light italic text-gray-200 max-w-5xl leading-relaxed"
         style={{ textShadow: "0 0 30px rgba(0,255,65,0.1)" }}>&ldquo;{quote}&rdquo;</motion.blockquote>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-10 text-xl text-gray-500">— {author}</motion.p>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-10 text-2xl text-gray-500">— {author}</motion.p>
     </div>
   );
 }
@@ -205,19 +205,19 @@ function TwoColumnSlide({ title, icon, left, right }: { title: string; icon: str
   return (
     <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-5 mb-10">
-        <span className="text-5xl">{icon}</span>
-        <h2 className="text-4xl sm:text-5xl font-bold text-center">{title}</h2>
+        <span className="text-6xl">{icon}</span>
+        <h2 className="text-5xl sm:text-6xl font-bold text-center">{title}</h2>
       </motion.div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full max-w-6xl">
         <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
           className="border-l-4 border-red-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-8 py-6 glow-border-red">
-          <h3 className="text-2xl font-bold text-red-400 mb-5">{left.title}</h3>
-          <ul className="space-y-4">{left.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-red-400 mt-0.5">✕</span>{item}</li>)}</ul>
+          <h3 className="text-3xl font-bold text-red-400 mb-5">{left.title}</h3>
+          <ul className="space-y-4">{left.items.map((item, i) => <li key={i} className="text-xl text-gray-300 flex items-start gap-3"><span className="text-red-400 mt-0.5">✕</span>{item}</li>)}</ul>
         </motion.div>
         <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
           className="border-l-4 border-green-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-8 py-6 glow-border-green">
-          <h3 className="text-2xl font-bold text-green-400 mb-5">{right.title}</h3>
-          <ul className="space-y-4">{right.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-green-400 mt-0.5">✓</span>{item}</li>)}</ul>
+          <h3 className="text-3xl font-bold text-green-400 mb-5">{right.title}</h3>
+          <ul className="space-y-4">{right.items.map((item, i) => <li key={i} className="text-xl text-gray-300 flex items-start gap-3"><span className="text-green-400 mt-0.5">✓</span>{item}</li>)}</ul>
         </motion.div>
       </div>
     </div>
@@ -229,9 +229,9 @@ function BigTextSlide({ text, subtext, color = "#00ff41" }: { text: string; subt
     <div className="flex flex-col items-center justify-center h-full px-12 sm:px-24 text-center">
       <motion.h1 initial={{ opacity: 0, scale: 0.7, filter: "blur(12px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         transition={{ type: "spring", stiffness: 80, damping: 12 }}
-        className="text-5xl sm:text-7xl font-black max-w-6xl leading-tight" style={{ color, textShadow: `0 0 20px ${color}40, 0 0 60px ${color}15` }}>{text}</motion.h1>
+        className="text-6xl sm:text-8xl font-black max-w-6xl leading-tight" style={{ color, textShadow: `0 0 20px ${color}40, 0 0 60px ${color}15` }}>{text}</motion.h1>
       <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-        className="mt-10 text-2xl text-gray-400 max-w-4xl leading-relaxed">{subtext}</motion.p>
+        className="mt-10 text-2xl sm:text-3xl text-gray-400 max-w-4xl leading-relaxed">{subtext}</motion.p>
     </div>
   );
 }
@@ -779,7 +779,7 @@ const slides: Slide[] = [
           transition={{ repeat: Infinity, duration: 2.5 }}
           className="bg-white p-12 rounded-3xl">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://hackleme-sanati.vercel.app/bolum/qr-kod-tuzagi"
-            alt="QR" className="w-[32rem] h-[32rem] sm:w-[36rem] sm:h-[36rem]" />
+            alt="QR" className="w-[34rem] h-[34rem] sm:w-[40rem] sm:h-[40rem]" />
         </motion.div>
       </motion.div>
     </div>
@@ -957,7 +957,7 @@ const slides: Slide[] = [
           transition={{ repeat: Infinity, duration: 2.5 }}
           className="bg-white p-12 rounded-3xl">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://hackleme-sanati.vercel.app"
-            alt="QR" className="w-[32rem] h-[32rem] sm:w-[36rem] sm:h-[36rem]" />
+            alt="QR" className="w-[34rem] h-[34rem] sm:w-[40rem] sm:h-[40rem]" />
         </motion.div>
       </motion.div>
     </div>
@@ -969,30 +969,30 @@ const slides: Slide[] = [
       <motion.h1 initial={{ opacity: 0, y: 20, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         className="text-6xl sm:text-8xl font-black mb-4" style={{ textShadow: "0 0 30px rgba(0,255,65,0.3)" }}>Teşekkürler!</motion.h1>
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-        className="text-2xl text-gray-400 mb-3">Sorularınız için hazırım.</motion.p>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mb-8">
-        <p className="text-gray-300 text-xl font-bold">Öğr. Gör. Osman Can Çetlenbik</p>
-        <p className="text-gray-500 text-base mt-1">osmancancetlenbik@gmail.com</p>
+        className="text-3xl text-gray-400 mb-4">Sorularınız için hazırım.</motion.p>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mb-10">
+        <p className="text-gray-300 text-2xl font-bold">Öğr. Gör. Osman Can Çetlenbik</p>
+        <p className="text-gray-500 text-xl mt-2">osmancancetlenbik@gmail.com</p>
       </motion.div>
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-        className="text-xl text-emerald-400 font-bold">Beni takip etmek için bir sonraki ekrandaki QR kodları tarayın.</motion.p>
+        className="text-2xl text-emerald-400 font-bold">Beni takip etmek için bir sonraki ekrandaki QR kodları tarayın.</motion.p>
     </div>
   )},
 
   { id: "closing-qr", content: (
-    <div className="flex items-center justify-center h-full w-full px-8">
-      <div className="flex flex-row items-start gap-8 sm:gap-12">
+    <div className="flex items-center justify-center h-full w-full px-6">
+      <div className="flex flex-row items-start gap-10 sm:gap-16">
         {[
           { url: "https://linkedin.com/in/osmancancetlenbik", label: "💼 LinkedIn", color: "59,130,246" },
           { url: "https://instagram.com/osmancancetlenbik", label: "📸 Instagram", color: "236,72,153" },
           { url: "https://hackleme-sanati.vercel.app", label: "🌐 Simülasyonlar", color: "0,255,65" },
         ].map((qr, i) => (
           <motion.div key={i} className="flex flex-col items-center" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.15, type: "spring" }}>
-            <motion.div animate={{ boxShadow: [`0 0 15px rgba(${qr.color},0.15)`, `0 0 50px rgba(${qr.color},0.4)`, `0 0 15px rgba(${qr.color},0.15)`] }}
+            <motion.div animate={{ boxShadow: [`0 0 15px rgba(${qr.color},0.15)`, `0 0 60px rgba(${qr.color},0.4)`, `0 0 15px rgba(${qr.color},0.15)`] }}
               transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.3 }} className="bg-white p-8 rounded-2xl mb-4">
-              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${qr.url}`} alt={qr.label} className="w-56 h-56 sm:w-64 sm:h-64" />
+              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${qr.url}`} alt={qr.label} className="w-64 h-64 sm:w-80 sm:h-80" />
             </motion.div>
-            <p className="text-2xl font-bold" style={{ color: `rgb(${qr.color})` }}>{qr.label}</p>
+            <p className="text-3xl font-bold" style={{ color: `rgb(${qr.color})` }}>{qr.label}</p>
           </motion.div>
         ))}
       </div>
