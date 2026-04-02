@@ -630,7 +630,7 @@ const SECTIONS = [
   { name: "Bahis & Veri", start: 20 },
   { name: "Zorbalık", start: 25 },
   { name: "Korunma", start: 28 },
-  { name: "Kapanış", start: 33 }, // sim-intro(33), sim-qr(34), closing(35), closing-qr(36)
+  { name: "Kapanış", start: 31 },
 ];
 
 /* ================================================================
@@ -927,42 +927,6 @@ const slides: Slide[] = [
   )},
 
   // ── KAPANIŞ ──
-  { id: "sim-intro", content: (
-    <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-[6rem] mb-6">🎮</motion.div>
-      <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-        className="text-5xl sm:text-7xl font-black text-emerald-400 mb-6" style={{ textShadow: "0 0 25px rgba(0,255,65,0.4)" }}>
-        30 İnteraktif Simülasyon
-      </motion.h1>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-        className="text-2xl text-gray-300 mb-8 max-w-2xl">Bir sonraki ekrandaki QR kodu tarayın ve dolandırıcılık senaryolarını kendiniz deneyimleyin.</motion.p>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-        className="grid grid-cols-2 gap-4 max-w-xl w-full">
-        {[{ e: "🎣", t: "Sahte banka ve kargo" }, { e: "📱", t: "SMS oltalama" }, { e: "📷", t: "QR kod tuzakları" }, { e: "🛡️", t: "Korunma ipuçları" }].map((item, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 + i * 0.1 }}
-            className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3 glow-border-green">
-            <span className="text-2xl">{item.e}</span><p className="text-lg text-gray-300">{item.t}</p>
-          </motion.div>
-        ))}
-      </motion.div>
-    </div>
-  )},
-
-  { id: "sim-qr", content: (
-    <div className="flex items-center justify-center h-full w-full">
-      <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 80, damping: 12 }}>
-        <motion.div
-          animate={{ boxShadow: ["0 0 30px rgba(0,255,65,0.15)", "0 0 100px rgba(0,255,65,0.45)", "0 0 30px rgba(0,255,65,0.15)"] }}
-          transition={{ repeat: Infinity, duration: 2.5 }}
-          className="bg-white p-12 rounded-3xl">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://hackleme-sanati.vercel.app"
-            alt="QR" className="w-[34rem] h-[34rem] sm:w-[40rem] sm:h-[40rem]" />
-        </motion.div>
-      </motion.div>
-    </div>
-  )},
-
   { id: "closing", content: (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-[6rem] mb-6">🎓</motion.div>
@@ -975,24 +939,23 @@ const slides: Slide[] = [
         <p className="text-gray-500 text-xl mt-2">osmancancetlenbik@gmail.com</p>
       </motion.div>
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-        className="text-2xl text-emerald-400 font-bold">Beni takip etmek için bir sonraki ekrandaki QR kodları tarayın.</motion.p>
+        className="text-2xl text-emerald-400 font-bold">Beni takip etmek için sonraki ekrandaki QR kodları tarayın.</motion.p>
     </div>
   )},
 
   { id: "closing-qr", content: (
     <div className="flex items-center justify-center h-full w-full px-6">
-      <div className="flex flex-row items-start gap-10 sm:gap-16">
+      <div className="flex flex-row items-start gap-16 sm:gap-24">
         {[
           { url: "https://linkedin.com/in/osmancancetlenbik", label: "💼 LinkedIn", color: "59,130,246" },
           { url: "https://instagram.com/osmancancetlenbik", label: "📸 Instagram", color: "236,72,153" },
-          { url: "https://hackleme-sanati.vercel.app", label: "🌐 Simülasyonlar", color: "0,255,65" },
         ].map((qr, i) => (
-          <motion.div key={i} className="flex flex-col items-center" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.15, type: "spring" }}>
-            <motion.div animate={{ boxShadow: [`0 0 15px rgba(${qr.color},0.15)`, `0 0 60px rgba(${qr.color},0.4)`, `0 0 15px rgba(${qr.color},0.15)`] }}
-              transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.3 }} className="bg-white p-8 rounded-2xl mb-4">
-              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${qr.url}`} alt={qr.label} className="w-64 h-64 sm:w-80 sm:h-80" />
+          <motion.div key={i} className="flex flex-col items-center" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.2, type: "spring" }}>
+            <motion.div animate={{ boxShadow: [`0 0 20px rgba(${qr.color},0.15)`, `0 0 80px rgba(${qr.color},0.45)`, `0 0 20px rgba(${qr.color},0.15)`] }}
+              transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.3 }} className="bg-white p-10 rounded-3xl mb-5">
+              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${qr.url}`} alt={qr.label} className="w-80 h-80 sm:w-96 sm:h-96" />
             </motion.div>
-            <p className="text-3xl font-bold" style={{ color: `rgb(${qr.color})` }}>{qr.label}</p>
+            <p className="text-4xl font-bold" style={{ color: `rgb(${qr.color})` }}>{qr.label}</p>
           </motion.div>
         ))}
       </div>
