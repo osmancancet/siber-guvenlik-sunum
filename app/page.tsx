@@ -132,13 +132,13 @@ function SectionTitle({ icon, title, subtitle, color = "#00ff41" }: { icon: stri
         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} />
       <div className="relative z-10 flex flex-col items-center">
         <motion.div initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 120, damping: 10 }}
-          className="text-[6rem] mb-6" style={{ filter: `drop-shadow(0 0 20px ${color}40)` }}>{icon}</motion.div>
+          className="text-[6rem] mb-8" style={{ filter: `drop-shadow(0 0 20px ${color}40)` }}>{icon}</motion.div>
         <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-5xl sm:text-7xl font-black tracking-tight mb-4" style={{ color, textShadow: `0 0 20px ${color}50, 0 0 60px ${color}20` }}>
+          className="text-5xl sm:text-7xl font-black tracking-tight mb-5" style={{ color, textShadow: `0 0 20px ${color}50, 0 0 60px ${color}20` }}>
           <GlitchText text={title} />
         </motion.h1>
         <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="h-[3px] w-60 mb-6 rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)`, boxShadow: `0 0 15px ${color}40` }} />
+          className="h-[3px] w-60 mb-8 rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)`, boxShadow: `0 0 15px ${color}40` }} />
         <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
           className="text-2xl text-gray-300 max-w-4xl">{subtitle}</motion.p>
       </div>
@@ -148,21 +148,21 @@ function SectionTitle({ icon, title, subtitle, color = "#00ff41" }: { icon: stri
 
 function BulletSlide({ title, icon, items, note }: { title: string; icon: string; items: { emoji: string; text: string }[]; note?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-8 sm:px-16">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-4 mb-8">
+    <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-5 mb-10">
         <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-5xl">{icon}</motion.span>
         <h2 className="text-4xl sm:text-5xl font-bold text-center">{title}</h2>
       </motion.div>
-      <div className="space-y-3 w-full max-w-6xl">
+      <div className="space-y-4 w-full max-w-6xl">
         {items.map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.12 * (i + 1), type: "spring", stiffness: 80 }}
-            className="flex items-start gap-4 border-l-4 border-emerald-500/50 bg-white/[0.03] backdrop-blur-sm rounded-r-xl pl-6 py-4 glow-border-green">
+            className="flex items-start gap-5 border-l-4 border-emerald-500/50 bg-white/[0.03] backdrop-blur-sm rounded-r-xl pl-8 py-5 glow-border-green">
             <span className="text-3xl shrink-0">{item.emoji}</span>
             <p className="text-xl text-gray-200 leading-relaxed">{item.text}</p>
           </motion.div>
         ))}
       </div>
-      {note && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-6 text-base text-gray-500 italic text-center max-w-4xl">{note}</motion.p>}
+      {note && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 text-base text-gray-500 italic text-center max-w-4xl">{note}</motion.p>}
     </div>
   );
 }
@@ -180,9 +180,9 @@ function AnimatedStat({ value, label, color, delay }: { value: string; label: st
 
 function StatSlide({ title, stats }: { title: string; stats: { value: string; label: string; color: string }[] }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-8">
-      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl sm:text-6xl font-bold mb-16 text-center">{title}</motion.h2>
-      <div className="flex flex-wrap items-start justify-center gap-12 sm:gap-20">
+    <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20">
+      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl sm:text-6xl font-bold mb-20 text-center">{title}</motion.h2>
+      <div className="flex flex-wrap items-start justify-center gap-14 sm:gap-24">
         {stats.map((s, i) => <AnimatedStat key={i} value={s.value} label={s.label} color={s.color} delay={0.25 * (i + 1)} />)}
       </div>
     </div>
@@ -191,33 +191,33 @@ function StatSlide({ title, stats }: { title: string; stats: { value: string; la
 
 function QuoteSlide({ quote, author, emoji }: { quote: string; author: string; emoji: string }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20 text-center">
-      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-6xl mb-8">{emoji}</motion.span>
+    <div className="flex flex-col items-center justify-center h-full px-12 sm:px-24 text-center">
+      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }} className="text-6xl mb-10">{emoji}</motion.span>
       <motion.blockquote initial={{ opacity: 0, y: 30, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ delay: 0.3, duration: 0.7 }}
         className="text-3xl sm:text-5xl font-light italic text-gray-200 max-w-5xl leading-relaxed"
         style={{ textShadow: "0 0 30px rgba(0,255,65,0.1)" }}>&ldquo;{quote}&rdquo;</motion.blockquote>
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 text-xl text-gray-500">— {author}</motion.p>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-10 text-xl text-gray-500">— {author}</motion.p>
     </div>
   );
 }
 
 function TwoColumnSlide({ title, icon, left, right }: { title: string; icon: string; left: { title: string; items: string[] }; right: { title: string; items: string[] } }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-8 sm:px-16">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-4 mb-8">
+    <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-5 mb-10">
         <span className="text-5xl">{icon}</span>
         <h2 className="text-4xl sm:text-5xl font-bold text-center">{title}</h2>
       </motion.div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-6xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full max-w-6xl">
         <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-          className="border-l-4 border-red-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-6 py-5 glow-border-red">
-          <h3 className="text-2xl font-bold text-red-400 mb-4">{left.title}</h3>
-          <ul className="space-y-3">{left.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-red-400 mt-0.5">✕</span>{item}</li>)}</ul>
+          className="border-l-4 border-red-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-8 py-6 glow-border-red">
+          <h3 className="text-2xl font-bold text-red-400 mb-5">{left.title}</h3>
+          <ul className="space-y-4">{left.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-red-400 mt-0.5">✕</span>{item}</li>)}</ul>
         </motion.div>
         <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
-          className="border-l-4 border-green-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-6 py-5 glow-border-green">
-          <h3 className="text-2xl font-bold text-green-400 mb-4">{right.title}</h3>
-          <ul className="space-y-3">{right.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-green-400 mt-0.5">✓</span>{item}</li>)}</ul>
+          className="border-l-4 border-green-500 bg-white/[0.03] backdrop-blur-sm rounded-xl pl-8 py-6 glow-border-green">
+          <h3 className="text-2xl font-bold text-green-400 mb-5">{right.title}</h3>
+          <ul className="space-y-4">{right.items.map((item, i) => <li key={i} className="text-lg text-gray-300 flex items-start gap-3"><span className="text-green-400 mt-0.5">✓</span>{item}</li>)}</ul>
         </motion.div>
       </div>
     </div>
@@ -226,12 +226,12 @@ function TwoColumnSlide({ title, icon, left, right }: { title: string; icon: str
 
 function BigTextSlide({ text, subtext, color = "#00ff41" }: { text: string; subtext: string; color?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-10 sm:px-20 text-center">
+    <div className="flex flex-col items-center justify-center h-full px-12 sm:px-24 text-center">
       <motion.h1 initial={{ opacity: 0, scale: 0.7, filter: "blur(12px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         transition={{ type: "spring", stiffness: 80, damping: 12 }}
         className="text-5xl sm:text-7xl font-black max-w-6xl leading-tight" style={{ color, textShadow: `0 0 20px ${color}40, 0 0 60px ${color}15` }}>{text}</motion.h1>
       <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-        className="mt-8 text-2xl text-gray-400 max-w-4xl leading-relaxed">{subtext}</motion.p>
+        className="mt-10 text-2xl text-gray-400 max-w-4xl leading-relaxed">{subtext}</motion.p>
     </div>
   );
 }
@@ -1101,7 +1101,7 @@ export default function Presentation() {
             animate={{ opacity: 1, x: 0, filter: "blur(0px) brightness(1)" }}
             exit={{ opacity: 0, x: direction * -30, filter: "blur(4px) brightness(0.5)" }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="h-full w-full pt-10 pb-16"
+            className="h-full w-full pt-14 pb-20"
           >
             {slideContent}
           </motion.div>
